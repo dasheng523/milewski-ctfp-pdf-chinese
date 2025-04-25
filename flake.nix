@@ -78,6 +78,9 @@
               nowidow
               scheme-medium
               subfigure
+              xecjk
+              ctex
+              zhnumber
               subfiles
               textpos
               tcolorbox
@@ -100,8 +103,12 @@
           };
 
           commonAttrs = {
+            texlive = pkgs.texlive.combine {
+              inherit (pkgs.texlive) scheme-medium xetex xecjk ctex zhnumber;
+            };
             nativeBuildInputs = [
               texliveEnv
+              pkgs.wqy_microhei
               (
                 pkgs.python3.withPackages (p: [ p.pygments p.pygments-style-github ])
               )

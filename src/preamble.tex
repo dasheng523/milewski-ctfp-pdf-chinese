@@ -19,11 +19,17 @@
 % Font settings
 %--------------------------------------------------------------%  Note:
 \usepackage[no-math]{fontspec}                                 %  This exact order
+\usepackage{xeCJK}                                              %  Add Chinese support
 \usepackage{libertine}                                         %  of declarations
 \defaultfontfeatures{%                                         %  is important for
   Scale=MatchLowercase, % needed here ...                      %  single quotes not
 }                                                              %  to turn out curly
 \setmonofont[BoldFont=Inconsolata-LGC-Bold.ttf]{Inconsolata-LGC-Bold.ttf} %  ("typographic")
+
+% Chinese font settings
+\setCJKmainfont{WenQuanYi Micro Hei}[BoldFont=WenQuanYi Micro Hei]
+\setCJKsansfont{WenQuanYi Micro Hei}[BoldFont=WenQuanYi Micro Hei]
+\setCJKmonofont{WenQuanYi Micro Hei}
                                                                %  in verbatim blocks
 \defaultfontfeatures{%                                         %  of Haskell code.
   Scale=MatchLowercase, % ... and here again                   %  Now the quote is
@@ -219,14 +225,7 @@
 
 % https://tex.stackexchange.com/questions/219445/line-break-in-texttt/219497
 \renewcommand{\code}[1]{%
-  \begingroup
-  \ttfamily
-  \begingroup\lccode`~=`/\lowercase{\endgroup\def~}{/\discretionary{}{}{}}%
-  \begingroup\lccode`~=`[\lowercase{\endgroup\def~}{[\discretionary{}{}{}}%
-  \begingroup\lccode`~=`.\lowercase{\endgroup\def~}{.\discretionary{}{}{}}%
-  \catcode`/=\active\catcode`[=\active\catcode`.=\active
-  \scantokens{#1\noexpand}%
-  \endgroup
+  \ensuremath{\mbox{\ttfamily\small #1}}%
 }
 
 \makeatletter

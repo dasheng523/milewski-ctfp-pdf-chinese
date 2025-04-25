@@ -24,3 +24,4 @@ out/*
 *.ind
 *.out
 *.toc
+.trae/
