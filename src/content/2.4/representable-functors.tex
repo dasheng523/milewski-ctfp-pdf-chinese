@@ -1,61 +1,18 @@
 % !TEX root = ../../ctfp-print.tex
 
-\lettrine[lhang=0.17]{I}{t's about time} we had a little talk about sets.
-Mathematicians have a love/hate relationship with set theory. It's the
-assembly language of mathematics --- at least it used to be. Category
-theory tries to step away from set theory, to some extent. For instance,
-it's a known fact that the set of all sets doesn't exist, but the category
-of all sets, $\Set$, does. So that's good. On the other hand, we assume that
-morphisms between any two objects in a category form a set. We even
-called it a hom-set. To be fair, there is a branch of category theory
-where morphisms don't form sets. Instead they are objects in another
-category. Those categories that use hom-objects rather than hom-sets,
-are called \newterm{enriched} categories. In what follows, though, we'll
-stick to categories with good old-fashioned hom-sets.
+\lettrine[lhang=0.17]{是}{时候}我们来谈谈集合 (sets) 了。数学家们对集合论 (set theory) 有着爱恨交织的关系。它是数学的汇编语言 (assembly language)——至少曾经是。范畴论在某种程度上试图摆脱集合论。例如，一个众所周知的事实是，所有集合的集合 (set of all sets) 不存在，但所有集合的范畴 (category of all sets)，$\Set$，确实存在。所以这很好。另一方面，我们假设范畴中任意两个对象之间的态射形成一个集合。我们甚至称之为 hom-集 (hom-set)。公平地说，范畴论有一个分支，其中的态射不形成集合。相反，它们是另一个范畴中的对象。这些使用 hom-对象 (hom-objects) 而不是 hom-集 的范畴，被称为 \newterm{enriched} categories (丰满范畴)。不过，在下文中，我们将坚持使用具有传统 hom-集的范畴。
 
-A set is the closest thing to a featureless blob you can get outside of
-categorical objects. A set has elements, but you can't say much about
-these elements. If you have a finite set, you can count the elements.
-You can kind of count the elements of an infinite set using cardinal
-numbers. The set of natural numbers, for instance, is smaller than the
-set of real numbers, even though both are infinite. But, maybe
-surprisingly, a set of rational numbers is the same size as the set of
-natural numbers.
+集合是你能在范畴对象之外找到的最接近无特征的“一团”的东西。集合有元素 (elements)，但你不能对这些元素说太多。如果你有一个有限集 (finite set)，你可以数出元素的数量。你可以使用基数 (cardinal numbers) 来大致计算无限集 (infinite set) 的元素数量。例如，自然数 (natural numbers) 的集合比实数 (real numbers) 的集合小，尽管两者都是无限的。但是，也许令人惊讶的是，有理数 (rational numbers) 的集合与自然数的集合大小相同。
 
-Other than that, all the information about sets can be encoded in
-functions between them --- especially the invertible ones called
-isomorphisms. For all intents and purposes isomorphic sets are
-identical. Before I summon the wrath of foundational mathematicians, let
-me explain that the distinction between equality and isomorphism is of
-fundamental importance. In fact it is one of the main concerns of the
-latest branch of mathematics, the Homotopy Type Theory (HoTT). I'm
-mentioning HoTT because it's a pure mathematical theory that takes
-inspiration from computation, and one of its main proponents, Vladimir
-Voevodsky, had a major epiphany while studying the Coq theorem prover.
-The interaction between mathematics and programming goes both ways.
+除此之外，关于集合的所有信息都可以通过它们之间的函数 (functions)——尤其是称为同构 (isomorphisms) 的可逆 (invertible) 函数——来编码。在所有意图和目的上，同构集合 (isomorphic sets) 是相同的。在我引来基础数学家们的愤怒之前，让我解释一下，相等 (equality) 和同构之间的区别具有根本的重要性。事实上，它是最新的数学分支——同伦类型论 (Homotopy Type Theory, HoTT) (Homotopy Type Theory (HoTT)) 的主要关注点之一。我提到 HoTT 是因为它是一个纯粹的数学理论，从计算中汲取灵感，其主要支持者之一 Vladimir Voevodsky 在研究 Coq 定理证明器 (theorem prover) 时获得了重大的顿悟。数学和编程之间的互动是双向的。
 
-The important lesson about sets is that it's okay to compare sets of
-unlike elements. For instance, we can say that a given set of natural
-transformations is isomorphic to some set of morphisms, because a set is
-just a set. Isomorphism in this case just means that for every natural
-transformation from one set there is a unique morphism from the other
-set and vice versa. They can be paired against each other. You can't
-compare apples with oranges, if they are objects from different
-categories, but you can compare sets of apples against sets of oranges.
-Often transforming a categorical problem into a set-theoretical problem
-gives us the necessary insight or even lets us prove valuable theorems.
+关于集合的重要教训是，比较不同元素的集合是可以的。例如，我们可以说一个给定的自然变换 (natural transformations) 集合与某个态射集合是同构的，因为集合就是集合。在这种情况下，同构仅仅意味着对于一个集合中的每一个自然变换，在另一个集合中都有一个唯一的态射与之对应，反之亦然。它们可以相互配对。如果苹果和橙子是不同范畴中的对象，你不能比较它们，但你可以比较苹果的集合和橙子的集合。通常，将范畴问题转化为集合论 (set-theoretical) 问题会给我们带来必要的洞察力，甚至让我们证明有价值的定理。
 
-\section{The Hom Functor}
+\section{Hom 函子}
 
-Every category comes equipped with a canonical family of mappings to
-$\Set$. Those mappings are in fact functors, so they preserve the
-structure of the category. Let's build one such mapping.
+每个范畴都配备了一族到 $\Set$ 的典范 (canonical) 映射 (mappings)。这些映射实际上是函子 (functors)，因此它们保持了范畴的结构。让我们构建一个这样的映射。
 
-Let's fix one object $a$ in $\cat{C}$ and pick another object
-$x$ also in $\cat{C}$. The hom-set $\cat{C}(a, x)$ is a set, an
-object in $\Set$. When we vary $x$, keeping $a$
-fixed, $\cat{C}(a, x)$ will also vary in $\Set$. Thus we have a
-mapping from $x$ to $\Set$.
+让我们在 $\cat{C}$ 中固定一个对象 $a$，并选择另一个也在 $\cat{C}$ 中的对象 $x$。hom-集 $\cat{C}(a, x)$ 是一个集合，即 $\Set$ 中的一个对象。当我们改变 $x$，保持 $a$ 固定时，$\cat{C}(a, x)$ 也将在 $\Set$ 中变化。因此，我们有了一个从 $x$ 到 $\Set$ 的映射。
 
 \begin{figure}[H]
   \centering
@@ -63,26 +20,13 @@ mapping from $x$ to $\Set$.
 \end{figure}
 
 \noindent
-If we want to stress the fact that we are considering the hom-set as a
-mapping in its second argument, we use the notation $\cat{C}(a, -)$
-with the dash serving as the placeholder for the argument.
+如果我们想强调我们正在将 hom-集视为其第二个参数的映射，我们使用符号 $\cat{C}(a, -)$，其中的破折号作为参数的占位符 (placeholder)。
 
-This mapping of objects is easily extended to the mapping of morphisms.
-Let's take a morphism $f$ in $\cat{C}$ between two arbitrary
-objects $x$ and $y$. The object $x$ is mapped to
-the set $\cat{C}(a, x)$, and the object $y$ is mapped to
-$\cat{C}(a, y)$, under the mapping we have just defined. If this
-mapping is to be a functor, $f$ must be mapped to a function
-between the two sets: $\cat{C}(a, x) \to \cat{C}(a, y)$
+这种对象的映射很容易扩展到态射的映射。让我们取 $\cat{C}$ 中任意两个对象 $x$ 和 $y$ 之间的一个态射 $f$。根据我们刚刚定义的映射，对象 $x$ 被映射到集合 $\cat{C}(a, x)$，对象 $y$ 被映射到集合 $\cat{C}(a, y)$。如果这个映射要成为一个函子，那么 $f$ 必须被映射到这两个集合之间的一个函数：$\cat{C}(a, x) \to \cat{C}(a, y)$。
 
-Let's define this function point-wise, that is for each argument
-separately. For the argument we should pick an arbitrary element of
-$\cat{C}(a, x)$ --- let's call it $h$. Morphisms are
-composable, if they match end to end. It so happens that the target of
-$h$ matches the source of $f$, so their composition:
+让我们逐点定义这个函数，也就是说，对每个参数分别定义。对于参数，我们应该选择 $\cat{C}(a, x)$ 的一个任意元素——我们称之为 $h$。如果态射首尾相接，它们就是可组合的。碰巧 $h$ 的目标 (target) 与 $f$ 的源 (source) 匹配，所以它们的复合：
 \[f \circ h \Colon a \to y\]
-is a morphism going from $a$ to $y$. It is therefore a
-member of $\cat{C}(a, y)$.
+是一个从 $a$ 到 $y$ 的态射。因此，它是 $\cat{C}(a, y)$ 的一个成员。
 
 \begin{figure}[H]
   \centering
@@ -90,243 +34,129 @@ member of $\cat{C}(a, y)$.
 \end{figure}
 
 \noindent
-We have just found our function from $\cat{C}(a, x)$ to
-$\cat{C}(a, y)$, which can serve as the image of $f$. If there
-is no danger of confusion, we'll write this lifted function as: $\cat{C}(a, f)$
-and its action on a morphism $h$ as:
+我们刚刚找到了从 $\cat{C}(a, x)$ 到 $\cat{C}(a, y)$ 的函数，它可以作为 $f$ 的像 (image)。如果没有混淆的危险，我们将这个提升后的函数写为：$\cat{C}(a, f)$，它作用于态射 $h$ 的方式为：
 \[\cat{C}(a, f) h = f \circ h\]
-Since this construction works in any category, it must also work in the
-category of Haskell types. In Haskell, the hom-functor is better known
-as the \code{Reader} functor:
+由于这种构造在任何范畴中都有效，它也必须在 Haskell 类型的范畴中有效。在 Haskell 中，hom-函子 (Hom functor) 更为人所知的名字是 \code{Reader} 函子：
 
 \src{snippet01}
 
 \src{snippet02}
-Now let's consider what happens if, instead of fixing the source of the
-hom-set, we fix the target. In other words, we're asking the question if
-the mapping $\cat{C}(-, a)$ is also a functor. It is, but instead of being covariant, it's
-contravariant. That's because the same kind of matching of morphisms end
-to end results in postcomposition by $f$; rather than
-precomposition, as was the case with $\cat{C}(a, -)$.
+现在让我们考虑，如果我们固定 hom-集的目标而不是源，会发生什么。换句话说，我们在问映射 $\cat{C}(-, a)$ 是否也是一个函子。它是，但它不是协变 (covariant) 的，而是逆变 (contravariant) 的。这是因为同样类型的态射首尾匹配导致的是 $f$ 的后复合 (postcomposition)；而不是像 $\cat{C}(a, -)$ 那样的前复合 (precomposition)。
 
-We have already seen this contravariant functor in Haskell. We called it
-\code{Op}:
+我们已经在 Haskell 中见过这个逆变函子。我们称之为 \code{Op}：
 
 \src{snippet03}
 
 \src{snippet04}
-Finally, if we let both objects vary, we get a profunctor
-$\cat{C}(-, =)$, which is contravariant in the first argument and
-covariant in the second (to underline the fact that the two arguments
-may vary independently, we use a double dash as the second placeholder).
-We have seen this profunctor before, when we talked about functoriality:
+最后，如果我们让两个对象都变化，我们得到一个 pro\-functor $\cat{C}(-, =)$，它在第一个参数上是逆变的，在第二个参数上是协变的（为了强调两个参数可以独立变化，我们使用双破折号作为第二个占位符）。我们在讨论函子性 (functoriality) 时已经见过这个 profunctor：
 
 \src{snippet05}
-The important lesson is that this observation holds in any category: the
-mapping of objects to hom-sets is functorial. Since contravariance is
-equivalent to a mapping from the opposite category, we can state this
-fact succinctly as:
+重要的教训是，这个观察在任何范畴中都成立：对象到 hom-集的映射是函子性的。由于逆变性等价于从对偶范畴 (opposite category) 的映射，我们可以简洁地表述这一事实：
 \[C(-, =) \Colon \cat{C}^\mathit{op} \times \cat{C} \to \Set\]
 
-\section{Representable Functors}
+\section{可表示函子 (Representable Functors)}
 
-We've seen that, for every choice of an object $a$ in $\cat{C}$,
-we get a functor from $\cat{C}$ to $\Set$. This kind of
-structure-preserving mapping to $\Set$ is often called a
-\newterm{representation}. We are representing objects and morphisms of
-$\cat{C}$ as sets and functions in $\Set$.
+我们已经看到，对于 $\cat{C}$ 中对象的每一种选择 $a$，我们都得到一个从 $\cat{C}$ 到 $\Set$ 的函子。这种到 $\Set$ 的保持结构的映射通常被称为 \newterm{representation} (表示)。我们正在将 $\cat{C}$ 的对象和态射表示为 $\Set$ 中的集合和函数。
 
-The functor $\cat{C}(a, -)$ itself is sometimes called representable.
-More generally, any functor $F$ that is naturally isomorphic to
-the hom-functor, for some choice of $a$, is called
-\newterm{representable}. Such a functor must necessarily be
-$\Set$-valued, since $\cat{C}(a, -)$ is.
+函子 $\cat{C}(a, -)$ 本身有时被称为可表示的 (representable)。更一般地，任何对于某个 $a$ 的选择，与 hom-函子自然同构 (naturally isomorphic) 的函子 $F$，都被称为 \newterm{representable} (可表示的)。这样的函子必须是以 $\Set$ 为值的 ($\Set$-valued)，因为 $\cat{C}(a, -)$ 是。
 
-I said before that we often think of isomorphic sets as identical. More
-generally, we think of isomorphic \emph{objects} in a category as
-identical. That's because objects have no structure other than their
-relation to other objects (and themselves) through morphisms.
+我之前说过，我们通常认为同构的集合是相同的。更一般地，我们认为范畴中同构的 \emph{对象} 是相同的。这是因为对象除了通过态射与其他对象（以及自身）的关系外，没有其他结构。
 
-For instance, we've previously talked about the category of monoids,
-$\cat{Mon}$, that was initially modeled with sets. But we were careful
-to pick as morphisms only those functions that preserved the monoidal
-structure of those sets. So if two objects in $\cat{Mon}$ are
-isomorphic, meaning there is an invertible morphism between them, they
-have exactly the same structure. If we peeked at the sets and functions
-that they were based upon, we'd see that the unit element of one monoid
-was mapped to the unit element of another, and that a product of two
-elements was mapped to the product of their mappings.
+例如，我们之前讨论过幺半群范畴 $\cat{Mon}$，它最初是用集合建模的。但我们小心地只选择那些保持这些集合的幺半群结构的函数作为态射。因此，如果 $\cat{Mon}$ 中的两个对象是同构的，意味着它们之间存在一个可逆的态射，那么它们具有完全相同的结构。如果我们窥视它们所基于的集合和函数，我们会看到一个幺半群的单位元被映射到另一个幺半群的单位元，并且两个元素的积被映射到它们映射后的积。
 
-The same reasoning can be applied to functors. Functors between two
-categories form a category in which natural transformations play the
-role of morphisms. So two functors are isomorphic, and can be thought of
-as identical, if there is an invertible natural transformation between
-them.
+同样的推理可以应用于函子。两个范畴之间的函子形成一个范畴，其中自然变换扮演着态射的角色。因此，如果两个函子之间存在一个可逆的自然变换，那么它们是同构的，可以被认为是相同的。
 
-Let's analyze the definition of the representable functor from this
-perspective. For $F$ to be representable we require that: There
-be an object $a$ in $\cat{C}$; one natural transformation $\alpha$ from
-$\cat{C}(a, -)$ to $F$; another natural transformation, $\beta$, in
-the opposite direction; and that their composition be the identity
-natural transformation.
+让我们从这个角度分析可表示函子的定义。要使 $F$ 可表示，我们需要：存在 $\cat{C}$ 中的一个对象 $a$；一个从 $\cat{C}(a, -)$ 到 $F$ 的自然变换 $\alpha$；另一个反方向的自然变换 $\beta$；并且它们的复合是恒等自然变换 (identity natural transformation)。
 
-Let's look at the component of $\alpha$ at some object $x$. It's a
-function in $\Set$:
+让我们看一下 $\alpha$ 在某个对象 $x$ 处的 分量 (component)。它是 $\Set$ 中的一个函数：
 \[\alpha_x \Colon \cat{C}(a, x) \to F x\]
-The naturality condition for this transformation tells us that, for any
-morphism $f$ from $x$ to $y$, the following diagram
-commutes:
+这个变换的自然性条件 (naturality condition) 告诉我们，对于任何从 $x$ 到 $y$ 的态射 $f$，以下图表是可交换的：
 \[F f \circ \alpha_x = \alpha_y \circ \cat{C}(a, f)\]
-In Haskell, we would replace natural transformations with polymorphic
-functions:
+在 Haskell 中，我们会用多态函数 (polymorphic functions) 替换自然变换：
 
 \src{snippet06}
-with the optional \code{forall} quantifier. The naturality condition
+带有可选的 \code{forall} 量词。自然性条件
 
 \src{snippet07}
-is automatically satisfied due to parametricity (it's one of those
-theorems for free I mentioned earlier), with the understanding that
-\code{fmap} on the left is defined by the functor $F$, whereas
-the one on the right is defined by the reader functor. Since
-\code{fmap} for reader is just function precomposition, we can be even
-more explicit. Acting on $h$, an element of $\cat{C}(a, x)$,
-the naturality condition simplifies to:
+由于参数化性质 (parametricity)（这是我之前提到的那些免费定理 (theorems for free) 之一）而自动满足，需要理解的是，左侧的 \code{fmap} 由函子 $F$ 定义，而右侧的则由 reader 函子定义。由于 reader 的 \code{fmap} 只是函数前复合，我们可以更明确。作用于 $h$（$\cat{C}(a, x)$ 的一个元素），自然性条件简化为：
 
 \src{snippet08}
-The other transformation, \code{beta}, goes the opposite way:
+另一个变换 \code{beta} 的方向相反：
 
 \src{snippet09}
-It must respect naturality conditions, and it must be the inverse of \code{alpha}:
+它必须遵守自然性条件，并且必须是 \code{alpha} 的逆 (inverse)：
 
 \begin{snip}{text}
 alpha . beta = id = beta . alpha
 \end{snip}
-We will see later that a natural transformation from $\cat{C}(a, -)$
-to any $\Set$-valued functor always exists as long as $F a$ is
-non-empty (Yoneda's lemma) but it is not necessarily invertible.
+我们稍后会看到（根据 Yoneda 引理），只要 $F a$ 非空，从 $\cat{C}(a, -)$ 到任何以 $\Set$ 为值的函子的自然变换总是存在，但它不一定是可逆的。
 
-Let me give you an example in Haskell with the list functor and
-\code{Int} as \code{a}. Here's a natural transformation that does
-the job:
+让我给你一个 Haskell 中的例子，使用列表函子 (list functor) 和 \code{Int} 作为 \code{a}。下面是一个完成这项工作的自然变换：
 
 \src{snippet10}
-I have arbitrarily picked the number 12 and created a singleton list
-with it. I can then \code{fmap} the function \code{h} over this list
-and get a list of the type returned by \code{h}. (There are actually
-as many such transformations as there are list of integers.)
+我任意选择了数字 12 并用它创建了一个单元列表。然后我可以将函数 \code{h} \code{fmap} 到这个列表上，得到一个类型为 \code{h} 返回类型的列表。（实际上，有多少个整数列表，就有多少个这样的变换。）
 
-The naturality condition is equivalent to the composability of
-\code{map} (the list version of \code{fmap}):
+自然性条件等价于 \code{map}（列表版本的 \code{fmap}）的可组合性：
 
 \src{snippet11}
-But if we tried to find the inverse transformation, we would have to go
-from a list of arbitrary type \code{x} to a function returning
-\code{x}:
+但是如果我们试图找到逆变换 (inverse transformation)，我们将不得不从一个任意类型 \code{x} 的列表转换到一个返回 \code{x} 的函数：
 
 \src{snippet12}
-You might think of retrieving an \code{x} from the list, e.g., using
-\code{head}, but that won't work for an empty list. Notice that there
-is no choice for the type \code{a} (in place of \code{Int}) that
-would work here. So the list functor is not representable.
+你可能会想到从列表中检索一个 \code{x}，例如使用 \code{head}，但这对于空列表不起作用。请注意，对于类型 \code{a}（代替 \code{Int}）没有选择可以在这里工作。所以列表函子是不可表示的。
 
-Remember when we talked about Haskell (endo-) functors being a little
-like containers? In the same vein we can think of representable functors
-as containers for storing memoized results of function calls (the
-members of hom-sets in Haskell are just functions). The representing
-object, the type $a$ in $\cat{C}(a, -)$, is thought of as the
-key type, with which we can access the tabulated values of a function.
-The transformation we called \code{alpha} is called \code{tabulate}, and its
-inverse, \code{beta}, is called \code{index}. Here's a (slightly simplified)
-\code{Representable} class definition:
+还记得我们谈到 Haskell 的（自）函子 (endo-functors) 有点像容器 (containers) 吗？同样地，我们可以将可表示函子看作是存储函数调用（在 Haskell 中 hom-集的成员就是函数）的记忆化结果 (memoized results) 的容器。表示对象 (representing object)，即 $\cat{C}(a, -)$ 中的类型 $a$，被认为是键类型 (key type)，我们可以用它来访问函数的制表值 (tabulated values)。我们称为 \code{alpha} 的变换被称为 \code{tabulate} (制表)，它的逆 \code{beta} 被称为 \code{index} (索引)。这是一个（稍微简化的）\code{Representable} 类 (Representable class) 定义：
 
 \src{snippet13}
-Notice that the representing type, our $a$, which is called
-\code{Rep f} here, is part of the definition of
-\code{Representable}. The star just means that \code{Rep f} is a
-type (as opposed to a type constructor, or other more exotic kinds).
+注意，表示类型，即我们的 $a$，在这里称为 \code{Rep f}，是 \code{Representable} 定义的一部分。星号只是意味着 \code{Rep f} 是一个类型（而不是类型构造器 (type constructor)，或其他更奇特的种类）。
 
-Infinite lists, or streams, which cannot be empty, are representable.
+无限列表，或流 (streams)，它们不能为空，是可表示的。
 
 \src{snippet14}
-You can think of them as memoized values of a function taking an
-\code{Integer} as an argument. (Strictly speaking, I should be using
-non-negative natural numbers, but I didn't want to complicate the code.)
+你可以将它们视为以 \code{Integer} 作为参数的函数的记忆化值。（严格来说，我应该使用非负自然数，但我不想让代码复杂化。）
 
-To \code{tabulate} such a function, you create an infinite stream of
-values. Of course, this is only possible because Haskell is lazy. The
-values are evaluated on demand. You access the memoized values using
-\code{index}:
+要 \code{tabulate} 这样一个函数，你创建一个无限的值流。当然，这只有在 Haskell 是惰性求值 (lazy) 的情况下才可能。值是按需 (on demand) 计算的。你使用 \code{index} 访问记忆化的值：
 
 \src{snippet15}
-It's interesting that you can implement a single memoization scheme to
-cover a whole family of functions with arbitrary return types.
+有趣的是，你可以实现一个单一的记忆化方案来覆盖具有任意返回类型的整个函数族。
 
-Representability for contravariant functors is similarly defined, except
-that we keep the second argument of $\cat{C}(-, a)$ fixed. Or,
-equivalently, we may consider functors from $\cat{C}^\mathit{op}$
-to $\Set$, because $\cat{C}^\mathit{op}(a, -)$ is the same as
-$\cat{C}(-, a)$.
+逆变函子的可表示性定义类似，只是我们固定 $\cat{C}(-, a)$ 的第二个参数。或者，等价地，我们可以考虑从 $\cat{C}^\mathit{op}$ 到 $\Set$ 的函子，因为 $\cat{C}^\mathit{op}(a, -)$ 与 $\cat{C}(-, a)$ 相同。
 
-There is an interesting twist to representability. Remember that
-hom-sets can internally be treated as exponential objects, in Cartesian
-closed categories. The hom-set $\cat{C}(a, x)$ is equivalent to
-$x^a$, and for a representable functor $F$ we can write: $-^a = F$.
+可表示性有一个有趣的转折。记住，在笛卡尔闭范畴 (Cartesian closed categories) 中，hom-集可以在内部被视为指数对象 (exponential objects)。hom-集 $\cat{C}(a, x)$ 等价于 $x^a$，对于一个可表示函子 $F$，我们可以写成：$-^a = F$。
 
-Let's take the logarithm of both sides, just for kicks: $a = \mathbf{log}F$
+让我们对两边取对数 (logarithm)，只是为了好玩：$a = \mathbf{log}F$
 
-Of course, this is a purely formal transformation, but if you know some
-of the properties of logarithms, it is quite helpful. In particular, it
-turns out that functors that are based on product types can be
-represented with sum types, and that sum-type functors are not in
-general representable (example: the list functor).
+当然，这只是一个纯粹的形式变换，但如果你了解对数的一些性质，它会很有帮助。特别是，事实证明，基于积类型 (product types) 的函子可以用和类型 (sum types) 来表示，而和类型的函子通常是不可表示的（例如：列表函子）。
 
-Finally, notice that a representable functor gives us two different
-implementations of the same thing --- one a function, one a data
-structure. They have exactly the same content --- the same values are
-retrieved using the same keys. That's the sense of ``sameness'' I was
-talking about. Two naturally isomorphic functors are identical as far as
-their contents are involved. On the other hand, the two representations
-are often implemented differently and may have different performance
-characteristics. Memoization is used as a performance enhancement and
-may lead to substantially reduced run times. Being able to generate
-different representations of the same underlying computation is very
-valuable in practice. So, surprisingly, even though it's not concerned
-with performance at all, category theory provides ample opportunities to
-explore alternative implementations that have practical value.
+最后，请注意，一个可表示函子为我们提供了同一事物的两种不同实现——一个是函数，另一个是数据结构。它们具有完全相同的内容——使用相同的键检索相同的值。这就是我所说的“相同性”的意义。就其内容而言，两个自然同构的函子是相同的。另一方面，这两种表示通常实现方式不同，并可能具有不同的性能特征 (performance characteristics)。记忆化 (Memoization) 被用作性能增强手段，并可能导致运行时间 (run times) 大幅缩短。能够为相同的底层计算 (underlying computation) 生成不同的表示在实践中非常有价值。因此，令人惊讶的是，尽管范畴论根本不关心性能，但它提供了大量机会来探索具有实用价值的替代实现。
 
-\section{Challenges}
+\section{挑战}
 
 \begin{enumerate}
   \tightlist
   \item
-        Show that the hom-functors map identity morphisms in \emph{C} to
-        corresponding identity functions in $\Set$.
+        证明 hom-函子将 \emph{C} 中的恒等态射映射到 $\Set$ 中相应的恒等函数。
   \item
-        Show that \code{Maybe} is not representable.
+        证明 \code{Maybe} 是不可表示的。
   \item
-        Is the \code{Reader} functor representable?
+        \code{Reader} 函子是可表示的吗？
   \item
-        Using \code{Stream} representation, memoize a function that squares
-        its argument.
+        使用 \code{Stream} 表示，记忆化一个对其参数进行平方运算的函数。
   \item
-        Show that \code{tabulate} and \code{index} for \code{Stream} are
-        indeed the inverse of each other. (Hint: use induction.)
+        证明 \code{Stream} 的 \code{tabulate} 和 \code{index} 确实互为逆运算。（提示：使用归纳法。）
   \item
-        The functor:
+        函子：
 
         \begin{snip}{haskell}
 Pair a = Pair a a
 \end{snip}
-        is representable. Can you guess the type that represents it? Implement
-        \code{tabulate} and \code{index}.
+        是可表示的。你能猜出表示它的类型吗？实现 \code{tabulate} 和 \code{index}。
 \end{enumerate}
 
-\section{Bibliography}
+\section{参考文献}
 
 \begin{enumerate}
   \tightlist
   \item
-        The Catsters video about
-        \urlref{https://www.youtube.com/watch?v=4QgjKUzyrhM}{representable
-          functors}.
+        The Catsters 关于
+        \urlref{https://www.youtube.com/watch?v=4QgjKUzyrhM}{可表示函子}的视频。
 \end{enumerate}

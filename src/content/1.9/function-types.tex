@@ -1,285 +1,157 @@
 % !TEX root = ../../ctfp-print.tex
 
-\lettrine[lhang=0.17]{S}{o far} I've been glossing over the meaning of function types. A function
-type is different from other types.
+\lettrine[lhang=0.17]{到}{目前为止}，我一直对 function types (函数类型) 的含义含糊其辞。函数类型与其他类型不同。
 
-Take \code{Integer}, for instance: It's just a set of integers.
-\code{Bool} is a two element set. But a function type
-$a\to b$ is more than that: it's a set of morphisms
-between objects $a$ and $b$. A set of morphisms between
-two objects in any category is called a hom-set. It just so happens that
-in the category $\Set$ every hom-set is itself an object in the
-same category ---because it is, after all, a \emph{set}.
+以 \code{Integer} 为例：它只是一个整数集合。\code{Bool} 是一个包含两个元素的集合。但是函数类型 $a\to b$ 不仅仅如此：它是对象 $a$ 和 $b$ 之间的 morphisms (态射) 集合。在任何范畴中，两个对象之间的态射集合称为 hom-set (态射集合)。恰好在范畴 $\Set$ 中，每个态射集合本身也是同一个范畴中的对象——因为它毕竟是一个 \emph{set} (集合)。
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.35\textwidth]{images/set-hom-set.jpg}
-  \caption{Hom-set in Set is just a set}
+  \caption{Set 中的 Hom-set 只是一个集合}
 \end{figure}
 
 \noindent
-The same is not true of other categories where hom-sets are external to
-a category. They are even called \emph{external} hom-sets.
+在其他范畴中，情况并非如此，它们的态射集合是范畴外部的。它们甚至被称为 \emph{external} hom-set (外部态射集合)。
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.35\textwidth]{images/hom-set.jpg}
-  \caption{Hom-set in category C is an external set}
+  \caption{范畴 C 中的 Hom-set 是一个外部集合}
 \end{figure}
 
 \noindent
-It's the self-referential nature of the category $\Set$ that makes
-function types special. But there is a way, at least in some categories,
-to construct objects that represent hom-sets. Such objects are called
-\newterm{internal} hom-sets.
+正是 $\Set$ 范畴的这种自指性质使得函数类型变得特殊。但是，至少在某些范畴中，有一种方法可以构造代表态射集合的对象。这样的对象被称为 \newterm{internal} hom-set (内部态射集合)。
 
-\section{Universal Construction}
+\section{泛构造}
 
-Let's forget for a moment that function types are sets and try to
-construct a function type, or more generally, an internal hom-set, from
-scratch. As usual, we'll take our cues from the $\Set$ category,
-but carefully avoid using any properties of sets, so that the
-construction will automatically work for other categories.
+让我们暂时忘记函数类型是集合，尝试从头开始构造一个函数类型，或者更一般地，一个内部态射集合。像往常一样，我们将从 $\Set$ 范畴中获取线索，但小心翼翼地避免使用集合的任何属性，以便该构造能够自动适用于其他范畴。
 
-A function type may be considered a composite type because of its
-relationship to the argument type and the result type. We've already
-seen the constructions of composite types --- those that involved
-relationships between objects. We used universal constructions to define
-a \hyperref[products-and-coproducts]{product
-  and coproduct types}. We can use the same trick to define a
-function type. We will need a pattern that involves three objects: the
-function type that we are constructing, the argument type, and the
-result type.
+函数类型可以被认为是一种复合类型，因为它与参数类型和结果类型有关。我们已经见过复合类型的构造——那些涉及对象之间关系的构造。我们使用 universal constructions (泛构造) 定义了 \hyperref[products-and-coproducts]{product} (积) 和 coproduct types (余积类型)。我们可以使用同样的技巧来定义函数类型。我们将需要一个涉及三个对象的模式：我们正在构造的函数类型、参数类型和结果类型。
 
-The obvious pattern that connects these three types is called
-\newterm{function application} or \newterm{evaluation}. Given a candidate for
-a function type, let's call it $z$ (notice that, if we are not in
-the category $\Set$, this is just an object like any other
-object), and the argument type $a$ (an object), the application
-maps this pair to the result type $b$ (an object). We have three
-objects, two of them fixed (the ones representing the argument type and
-the result type).
+连接这三种类型的明显模式称为 \newterm{function application} (函数应用) 或 \newterm{evaluation} (求值)。给定一个函数类型的候选者，我们称之为 $z$（注意，如果我们不在 $\Set$ 范畴中，这只是像任何其他对象一样的对象），以及参数类型 $a$（一个对象），应用将这对映射到结果类型 $b$（一个对象）。我们有三个对象，其中两个是固定的（代表参数类型和结果类型的对象）。
 
-We also have the application, which is a mapping. How do we incorporate
-this mapping into our pattern? If we were allowed to look inside
-objects, we could pair a function $f$ (an element of $z$)
-with an argument $x$ (an element of $a$) and map it to
-$f x$ (the application of $f$ to $x$, which is an
-element of $b$).
+我们还有应用，这是一个映射。我们如何将这个映射纳入我们的模式？如果我们被允许查看对象内部，我们可以将一个函数 $f$（$z$ 的一个元素）与一个参数 $x$（$a$ 的一个元素）配对，并将其映射到 $f x$（$f$ 对 $x$ 的应用，它是 $b$ 的一个元素）。
 
 \begin{figure}[H]
   \centering\includegraphics[width=0.35\textwidth]{images/functionset.jpg}
-  \caption{In Set we can pick a function $f$ from a set of functions $z$ and we can
-    pick an argument $x$ from the set (type) $a$. We get an element $f x$ in the
-    set (type) $b$.}
+  \caption{在 Set 中，我们可以从函数集合 $z$ 中选取一个函数 $f$，并从集合（类型）$a$ 中选取一个参数 $x$。我们在集合（类型）$b$ 中得到一个元素 $f x$。}
 \end{figure}
 
 \noindent
-But instead of dealing with individual pairs $(f, x)$, we can as
-well talk about the whole \emph{product} of the function type $z$
-and the argument type $a$. The product $z\times{}a$ is an object,
-and we can pick, as our application morphism, an arrow $g$ from
-that object to $b$. In $\Set$, $g$ would be the
-function that maps every pair $(f, x)$ to $f x$.
+但是，与其处理单个对 $(f, x)$，我们不如讨论整个函数类型 $z$ 和参数类型 $a$ 的 \emph{product} (积)。积 $z\times{}a$ 是一个对象，我们可以选择一个从该对象到 $b$ 的箭头 $g$ 作为我们的应用态射。在 $\Set$ 中，$g$ 将是把每个对 $(f, x)$ 映射到 $f x$ 的函数。
 
-So that's the pattern: a product of two objects $z$ and
-$a$ connected to another object $b$ by a morphism $g$.
+所以这就是模式：两个对象 $z$ 和 $a$ 的积通过一个态射 $g$ 连接到另一个对象 $b$。
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.4\textwidth]{images/functionpattern.jpg}
-  \caption{A pattern of objects and morphisms that is the starting point of the
-    universal construction}
+  \caption{作为泛构造起点的对象和态射的模式}
 \end{figure}
 
 \noindent
-Is this pattern specific enough to single out the function type using a
-universal construction? Not in every category. But in the categories of
-interest to us it is. And another question: Would it be possible to
-define a function object without first defining a product? There are
-categories in which there is no product, or there isn't a product for
-all pairs of objects. The answer is no: there is no function type, if
-there is no product type. We'll come back to this later when we talk
-about exponentials.
+这个模式是否足够具体，可以用泛构造来唯一确定函数类型？并非在每个范畴中都如此。但在我们感兴趣的范畴中是这样的。另一个问题是：是否有可能在不首先定义积的情况下定义函数对象？有些范畴中没有积，或者并非所有对象对都有积。答案是否定的：如果没有积类型，就没有函数类型。我们稍后讨论 exponentials (指数对象) 时会回到这一点。
 
-Let's review the universal construction. We start with a pattern of
-objects and morphisms. That's our imprecise query, and it usually yields
-lots and lots of hits. In particular, in $\Set$, pretty much
-everything is connected to everything. We can take any object
-$z$, form its product with $a$, and there's going to be a
-function from it to $b$ (except when $b$ is an empty set).
+让我们回顾一下泛构造。我们从一个对象和态射的模式开始。这是我们不精确的查询，通常会产生大量的匹配结果。特别是在 $\Set$ 中，几乎所有东西都与其他东西相连。我们可以取任何对象 $z$，将其与 $a$ 形成积，并且将会有一个从它到 $b$ 的函数（除非 $b$ 是空集）。
 
-That's when we apply our secret weapon: ranking. This is usually done by
-requiring that there be a unique mapping between candidate objects --- a
-mapping that somehow factorizes our construction. In our case, we'll
-decree that $z$ together with the morphism $g$ from
-$z \times a$ to $b$ is \emph{better} than some other
-$z'$ with its own application $g'$, if and
-only if there is a unique mapping $h$ from $z'$ to
-$z$ such that the application of $g'$ factors
-through the application of $g$. (Hint: Read this sentence while
-looking at the picture.)
+这时我们就要运用我们的秘密武器：ranking (排序)。这通常通过要求候选对象之间存在唯一的映射来完成——这个映射以某种方式 factorizes (因子分解) 我们的构造。在我们的例子中，我们将规定 $z$ 连同从 $z \times a$ 到 $b$ 的态射 $g$ 比某个带有其自身应用 $g'$ 的其他 $z'$ \emph{更好}，当且仅当存在一个唯一的映射 $h$ 从 $z'$ 到 $z$，使得 $g'$ 的应用通过 $g$ 的应用分解。（提示：看着图读这句话。）
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.4\textwidth]{images/functionranking.jpg}
-  \caption{Establishing a ranking between candidates for the function object}
+  \caption{在函数对象的候选者之间建立排序}
 \end{figure}
 
 \noindent
-Now here's the tricky part, and the main reason I postponed this
-particular universal construction till now. Given the morphism
-$h \Colon z'\to z$, we want to close the diagram
-that has both $z'$ and $z$ crossed with $a$.
-What we really need, given the mapping $h$ from $z'$
-to $z$, is a mapping from $z' \times a$ to $z \times a$.
-And now, after discussing the \hyperref[functoriality]{functoriality
-  of the product}, we know how to do it. Because the product itself is a
-functor (more precisely an endo-bi-functor), it's possible to lift pairs
-of morphisms. In other words, we can define not only products of objects
-but also products of morphisms.
+现在是棘手的部分，也是我直到现在才推迟这个特定泛构造的主要原因。给定态射 $h \Colon z'\to z$，我们想要闭合这个包含 $z'$ 与 $a$ 的积以及 $z$ 与 $a$ 的积的图。我们真正需要的是，给定从 $z'$ 到 $z$ 的映射 $h$，我们需要一个从 $z' \times a$ 到 $z \times a$ 的映射。现在，在讨论了 \hyperref[functoriality]{product's functoriality} (积的函子性) 之后，我们知道如何做到这一点。因为积本身是一个函子（更准确地说是一个自-双-函子），所以可以 lift pairs of morphisms (提升态射对)。换句话说，我们不仅可以定义对象的积，还可以定义态射的积。
 
-Since we are not touching the second component of the product
-$z' \times a$, we will lift the pair of morphisms
-$(h, \id)$, where $\id$ is an identity on $a$.
+由于我们没有触及积 $z' \times a$ 的第二个分量，我们将提升态射对 $(h, \id)$，其中 $\id$ 是 $a$ 上的 identity (单位态射)。
 
-So, here's how we can factor one application, $g$, out of another
-application $g'$:
+所以，这就是我们如何将一个应用 $g'$ 通过另一个应用 $g$ 分解出来：
 \[g' = g \circ (h \times \id)\]
-The key here is the action of the product on morphisms.
+这里的关键是积在态射上的作用。
 
-The third part of the universal construction is selecting the object
-that is universally the best. Let's call this object $a \Rightarrow b$ (think
-of this as a symbolic name for one object, not to be confused with a
-Haskell typeclass constraint --- I'll discuss different ways of naming
-it later). This object comes with its own application --- a morphism
-from $(a \Rightarrow b) \times a$ to $b$ --- which we will call
-$\mathit{eval}$. The object \code{$a \Rightarrow b$} is the best if any other
-candidate for a function object can be uniquely mapped to it in such a
-way that its application morphism $g$ factorizes through
-$\mathit{eval}$. This object is better than any other object according to
-our ranking.
+泛构造的第三部分是选择那个普遍最好的对象。让我们称这个对象为 $a \Rightarrow b$（把它看作一个对象的符号名称，不要与 Haskell 的类型类约束混淆——我稍后会讨论不同的命名方式）。这个对象带有它自己的应用——一个从 $(a \Rightarrow b) \times a$ 到 $b$ 的态射——我们称之为 $\mathit{eval}$。对象 $a \Rightarrow b$ 是最好的，如果任何其他函数对象的候选者都可以唯一地映射到它，使得其应用态射 $g$ 通过 $\mathit{eval}$ 分解。根据我们的排序，这个对象比任何其他对象都好。
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.4\textwidth]{images/universalfunctionobject.jpg}
-  \caption{The definition of the universal function object. This is the same
-    diagram as above, but now the object $a \Rightarrow b$ is \emph{universal}.}
+  \caption{泛函数对象的定义。这与上图相同，但现在对象 $a \Rightarrow b$ 是 \emph{泛}的。}
 \end{figure}
 
 \noindent
-Formally:
+形式化地：
 
 \begin{longtable}[]{@{}l@{}}
   \toprule
   \begin{minipage}[t]{0.97\columnwidth}\raggedright\strut
-    A \emph{function object} from $a$ to $b$ is an object
-    $a \Rightarrow b$ together with the morphism
+    从 $a$ 到 $b$ 的 \emph{function object} (函数对象) 是一个对象 $a \Rightarrow b$ 连同一个态射
     \[\mathit{eval} \Colon ((a \Rightarrow b) \times a) \to b\]
-    such that for any other object $z$ with a morphism
-    \[g \Colon z \times a \to b\]
-    there is a unique morphism
+    使得对于任何其他带有态射 $g \Colon z \times a \to b$ 的对象 $z$，存在一个唯一的态射
     \[h \Colon z \to (a \Rightarrow b)\]
-    that factors $g$ through $\mathit{eval}$:
+    将 $g$ 通过 $\mathit{eval}$ 分解：
     \[g = \mathit{eval} \circ (h \times \id)\]
   \end{minipage}\tabularnewline
   \bottomrule
 \end{longtable}
 
 \noindent
-Of course, there is no guarantee that such an object $a \Rightarrow b$ exists
-for any pair of objects $a$ and $b$ in a given category.
-But it always does in $\Set$. Moreover, in $\Set$, this
-object is isomorphic to the hom-set $\Set(a, b)$.
+当然，不能保证在给定范畴中对于任何一对对象 $a$ 和 $b$ 都存在这样一个对象 $a \Rightarrow b$。但它在 $\Set$ 中总是存在。此外，在 $\Set$ 中，这个对象与态射集合 $\Set(a, b)$ 同构。
 
-This is why, in Haskell, we interpret the function type
-\code{a -> b} as the categorical function object $a \Rightarrow b$.
+这就是为什么在 Haskell 中，我们将函数类型 \code{a -> b} 解释为范畴的函数对象 $a \Rightarrow b$。
 
-\section{Currying}
+\section{柯里化}
 
-Let's have a second look at all the candidates for the function object.
-This time, however, let's think of the morphism $g$ as a function
-of two variables, $z$ and $a$.
+让我们再看一下函数对象的所有候选者。然而，这次让我们将态射 $g$ 看作是两个变量 $z$ 和 $a$ 的函数。
 \[g \Colon z \times a \to b\]
-Being a morphism from a product comes as close as it gets to being a
-function of two variables. In particular, in $\Set$, $g$ is
-a function from pairs of values, one from the set $z$ and one
-from the set $a$.
+作为来自积的态射，这已经尽可能接近于成为两个变量的函数了。特别是在 $\Set$ 中，$g$ 是一个从值对（一个来自集合 $z$，一个来自集合 $a$）出发的函数。
 
-On the other hand, the universal property tells us that for each such
-$g$ there is a unique morphism $h$ that maps $z$ to
-a function object $a \Rightarrow b$.
+另一方面，泛性质告诉我们，对于每个这样的 $g$，存在一个唯一的态射 $h$，它将 $z$ 映射到一个函数对象 $a \Rightarrow b$。
 \[h \Colon z \to (a \Rightarrow b)\]
-In $\Set$, this just means that $h$ is a function that
-takes one variable of type $z$ and returns a function from
-$a$ to $b$. That makes $h$ a higher order function.
-Therefore the universal construction establishes a one-to-one
-correspondence between functions of two variables and functions of one
-variable returning functions. This correspondence is called
-\newterm{currying}, and $h$ is called the curried version of $g$.
+在 $\Set$ 中，这仅仅意味着 $h$ 是一个接受一个 $z$ 类型的变量并返回一个从 $a$ 到 $b$ 的函数的函数。这使得 $h$ 成为一个 higher order function (高阶函数)。因此，泛构造建立了一一对应关系，介于两个变量的函数和接受一个变量并返回函数的函数之间。这种对应关系称为 \newterm{currying} (柯里化)，而 $h$ 被称为 $g$ 的柯里化版本。
 
-This correspondence is one-to-one, because given any $g$ there is
-a unique $h$, and given any $h$ you can always recreate
-the two-argument function $g$ using the formula:
+这种对应关系是一一对应的，因为给定任何 $g$，都有唯一的 $h$，并且给定任何 $h$，你总是可以使用以下公式重新创建双参数函数 $g$：
 \[g = \mathit{eval} \circ (h \times \id)\]
-The function $g$ can be called the \emph{uncurried} version of $h$.
+函数 $g$ 可以被称为 $h$ 的 \emph{uncurried} (非柯里化) 版本。
 
-Currying is essentially built into the syntax of Haskell. A function
-returning a function:
+柯里化本质上内置于 Haskell 的语法中。一个返回函数的函数：
 
 \src{snippet01}
-is often thought of as a function of two variables. That's how we read
-the un-parenthesized signature:
+通常被认为是两个变量的函数。这就是我们解读未加括号的签名的方式：
 
 \src{snippet02}
-This interpretation is apparent in the way we define multi-argument
-functions. For instance:
+这种解释在我们定义多参数函数的方式中显而易见。例如：
 
 \src{snippet03}
-The same function can be written as a one-argument function returning a
-function --- a lambda:
+同一个函数可以写成一个接受单参数并返回函数的函数——一个 lambda 表达式：
 
 \src{snippet04}
-These two definitions are equivalent, and either can be partially
-applied to just one argument, producing a one-argument function, as in:
+这两个定义是等价的，并且两者都可以部分应用于仅一个参数，产生一个单参数函数，如：
 
 \src{snippet05}
-Strictly speaking, a function of two variables is one that takes a pair
-(a product type):
+严格来说，一个双变量函数是接受一个序对（积类型）的函数：
 
 \src{snippet06}
-It's trivial to convert between the two representations, and the two
-(higher-order) functions that do it are called, unsurprisingly,
-\code{curry} and \code{uncurry}:
+在这两种表示之间转换是微不足道的，完成转换的两个（高阶）函数毫不意外地被称为 \code{curry} 和 \code{uncurry}：
 
 \src{snippet07}
-and
+和
 
 \src{snippet08}
-Notice that \code{curry} is the \emph{factorizer} for the universal
-construction of the function object. This is especially apparent if it's
-rewritten in this form:
+注意，\code{curry} 是函数对象泛构造的 \emph{factorizer} (分解算子)。如果写成这种形式，这一点尤其明显：
 
 \src{snippet09}
-(As a reminder: A factorizer produces the factorizing function from a
-candidate.)
+（提醒：分解算子从候选者中产生分解函数。）
 
-In non-functional languages, like C++, currying is possible but
-nontrivial. You can think of multi-argument functions in C++ as
-corresponding to Haskell functions taking tuples (although, to confuse
-things even more, in C++ you can define functions that take an explicit
-\code{std::tuple}, as well as variadic functions, and functions taking
-initializer lists).
+在非函数式语言中，如 C++，柯里化是可能的但并非易事。你可以将 C++ 中的多参数函数看作对应于接受 tuples (元组) 的 Haskell 函数（尽管更令人困惑的是，在 C++ 中你可以定义接受显式 \code{std::tuple} 的函数，以及 variadic functions (可变参数函数) 和接受 initializer lists (初始化列表) 的函数）。
 
-You can partially apply a C++ function using the template
-\code{std::bind}. For instance, given a function of two strings:
+你可以使用模板 \code{std::bind} 来部分应用 C++ 函数。例如，给定一个接受两个字符串的函数：
 
 \begin{snip}{cpp}
 std::string catstr(std::string s1, std::string s2) {
     return s1 + s2;
 }
 \end{snip}
-you can define a function of one string:
+你可以定义一个接受单个字符串的函数：
 
 \begin{snip}{cpp}
 using namespace std::placeholders;
@@ -287,320 +159,159 @@ using namespace std::placeholders;
 auto greet = std::bind(catstr, "Hello ", _1);
 std::cout << greet("Haskell Curry");
 \end{snip}
-Scala, which is more functional than C++ or Java, falls somewhere in
-between. If you anticipate that the function you're defining will be
-partially applied, you define it with multiple argument lists:
+Scala 比 C++ 或 Java 更具函数式特性，处于两者之间。如果你预期你正在定义的函数会被部分应用，你可以用多个参数列表来定义它：
 
 \begin{snip}{cpp}
 def catstr(s1: String)(s2: String) = s1 + s2
 \end{snip}
-Of course that requires some amount of foresight or prescience on the
-part of a library writer.
+当然，这需要库编写者具有一定程度的远见或预知能力。
 
-\section{Exponentials}
+\section{指数对象}
 
-In mathematical literature, the function object, or the internal
-hom-object between two objects $a$ and $b$, is often
-called the \newterm{exponential} and denoted by $b^{a}$. Notice that
-the argument type is in the exponent. This notation might seem strange
-at first, but it makes perfect sense if you think of the relationship
-between functions and products. We've already seen that we have to use
-the product in the universal construction of the internal hom-object,
-but the connection goes deeper than that.
+在数学文献中，函数对象，或两个对象 $a$ 和 $b$ 之间的 internal hom-object (内部态射对象)，通常被称为 \newterm{exponential} (指数对象)，并表示为 $b^{a}$。注意参数类型在指数位置。这种表示法起初可能看起来很奇怪，但如果你考虑到函数和积之间的关系，它就完全说得通了。我们已经看到，在内部态射对象的泛构造中必须使用积，但联系远不止于此。
 
-This is best seen when you consider functions between finite types ---
-types that have a finite number of values, like \code{Bool},
-\code{Char}, or even \code{Int} or \code{Double}. Such functions,
-at least in principle, can be fully memoized or turned into data
-structures to be looked up. And this is the essence of the equivalence
-between functions, which are morphisms, and function types, which are
-objects.
+当你考虑 finite types (有限类型)——具有有限数量值的类型，如 \code{Bool}、\code{Char}，甚至 \code{Int} 或 \code{Double}——之间的函数时，这一点最为明显。这样的函数，至少在原则上，可以完全被 memoized (记忆化) 或转化为可供查找的 data structures (数据结构)。这就是作为态射的函数与作为对象的函数类型之间等价性的本质。
 
-For instance a (pure) function from \code{Bool} is completely
-specified by a pair of values: one corresponding to \code{False}, and
-one corresponding to \code{True}. The set of all possible functions
-from \code{Bool} to, say, \code{Int} is the set of all pairs of
-\code{Int}s. This is the same as the product \code{Int} \times{} \code{Int} or,
-being a little creative with notation, \code{Int}\textsuperscript{2}.
+例如，一个来自 \code{Bool} 的（纯）函数完全由一对值指定：一个对应于 \code{False}，一个对应于 \code{True}。所有可能的从 \code{Bool} 到（比如）\code{Int} 的函数的集合就是所有 \code{Int} 对的集合。这与积 \code{Int} \times{} \code{Int} 相同，或者稍微创新一点表示法，\code{Int}\textsuperscript{2}。
 
-For another example, let's look at the C++ type \code{char}, which
-contains 256 values (Haskell \code{Char} is larger, because Haskell
-uses Unicode). There are several functions in the part of the
-C++ Standard Library that are usually implemented using lookups.
-Functions like \code{isupper} or \code{isspace} are implemented
-using tables, which are equivalent to tuples of 256 Boolean values. A
-tuple is a product type, so we are dealing with products of 256
-Booleans: \code{bool \times{} bool \times{} bool \times{} ... \times{} bool}. We know from
-arithmetics that an iterated product defines a power. If you
-``multiply'' \code{bool} by itself 256 (or \code{char}) times, you
-get \code{bool} to the power of \code{char}, or \code{bool}\textsuperscript{\code{char}}.
+再举一个例子，让我们看看 C++ 类型 \code{char}，它包含 256 个值（Haskell 的 \code{Char} 更大，因为 Haskell 使用 Unicode）。C++ 标准库中有几个函数通常使用查找来实现。像 \code{isupper} 或 \code{isspace} 这样的函数是使用表格实现的，这等价于 256 个布尔值的元组。元组是 product type (积类型)，所以我们处理的是 256 个布尔值的积：\code{bool \times{} bool \times{} bool \times{} ... \times{} bool}。我们从算术中知道，迭代积定义了幂。如果你将 \code{bool} 自身“乘以” 256（或 \code{char}）次，你会得到 \code{bool} 的 \code{char} 次幂，或 \code{bool}\textsuperscript{\code{char}}。
 
-How many values are there in the type defined as 256-tuples of
-\code{bool}? Exactly $2^{256}$. This is also the number
-of different functions from \code{char} to \code{bool}, each
-function corresponding to a unique 256-tuple. You can similarly
-calculate that the number of functions from \code{bool} to
-\code{char} is $256^{2}$, and so on. The exponential
-notation for function types makes perfect sense in these cases.
+定义为 256 元组的 \code{bool} 类型中有多少个值？正好是 $2^{256}$。这也是从 \code{char} 到 \code{bool} 的不同函数的数量，每个函数对应一个唯一的 256 元组。你可以类似地计算出从 \code{bool} 到 \code{char} 的函数数量是 $256^{2}$，依此类推。在这些情况下，函数类型的指数表示法完全合理。
 
-We probably wouldn't want to fully memoize a function from \code{int}
-or \code{double}. But the equivalence between functions and data
-types, if not always practical, is there. There are also infinite types,
-for instance lists, strings, or trees. Eager memoization of functions
-from those types would require infinite storage. But Haskell is a lazy
-language, so the boundary between lazily evaluated (infinite) data
-structures and functions is fuzzy. This function vs. data duality
-explains the identification of Haskell's function type with the
-categorical exponential object --- which corresponds more to our idea of
-\emph{data}.
+我们可能不想完全记忆化一个来自 \code{int} 或 \code{double} 的函数。但是函数和数据类型之间的等价性，即使不总是实用，也是存在的。还有无限类型，例如列表、字符串或树。对这些类型的函数进行及早记忆化将需要无限的存储空间。但 Haskell 是一种惰性语言，因此 lazily evaluated (惰性求值) 的（无限）数据结构和函数之间的界限是模糊的。这种 function vs. data duality (函数与数据的对偶性) 解释了 Haskell 函数类型与范畴指数对象（这更符合我们对 \emph{data} (数据) 的概念）的认同。
 
-\section{Cartesian Closed Categories}
+\section{笛卡尔闭范畴}
 
-Although I will continue using the category of sets as a model for types
-and functions, it's worth mentioning that there is a larger family of
-categories that can be used for that purpose. These categories are
-called \newterm{Cartesian closed}, and $\Set$ is just one example of
-such a category.
+虽然我将继续使用集合范畴作为类型和函数的模型，但值得一提的是，存在一个更大的范畴族可以用于此目的。这些范畴被称为 \newterm{Cartesian closed} categories (笛卡尔闭范畴)，而 $\Set$ 只是这类范畴的一个例子。
 
-A Cartesian closed category must contain:
+一个笛卡尔闭范畴必须包含：
 
 \begin{enumerate}
   \tightlist
   \item
-        The terminal object,
+        The terminal object (终结对象)，
   \item
-        A product of any pair of objects, and
+        任何一对对象的 product (积)，以及
   \item
-        An exponential for any pair of objects.
+        任何一对对象的 exponential (指数对象)。
 \end{enumerate}
-If you consider an exponential as an iterated product (possibly
-infinitely many times), then you can think of a Cartesian closed
-category as one supporting products of an arbitrary arity. In
-particular, the terminal object can be thought of as a product of zero
-objects --- or the zero-th power of an object.
+如果你将指数对象视为迭代积（可能无限多次），那么你可以认为笛卡尔闭范畴是支持任意元数积的范畴。特别是，终结对象可以被认为是零个对象的积——或者说是一个对象的零次幂。
 
-What's interesting about Cartesian closed categories from the
-perspective of computer science is that they provide models for the
-simply typed lambda calculus, which forms the basis of all typed
-programming languages.
+从计算机科学的角度来看，笛卡尔闭范畴有趣的地方在于它们为简单类型 lambda 演算提供了模型，而简单类型 lambda 演算构成了所有类型化编程语言的基础。
 
-The terminal object and the product have their duals: the initial object
-and the coproduct. A Cartesian closed category that also supports those
-two, and in which product can be distributed over coproduct
+终结对象和积有它们的对偶：the initial object (初始对象) 和 the coproduct (余积)。一个同时也支持这两者，并且积可以在余积上分配
 \begin{gather*}
   a \times (b + c) = a \times b + a \times c \\
   (b + c) \times a = b \times a + c \times a
 \end{gather*}
-is called a \newterm{bicartesian closed} category. We'll see in the next
-section that bicartesian closed categories, of which $\Set$ is a
-prime example, have some interesting properties.
+的笛卡尔闭范畴被称为 \newterm{bicartesian closed} category (双笛卡尔闭范畴)。我们将在下一节看到，双笛卡尔闭范畴，其中 $\Set$ 是一个典型的例子，具有一些有趣的属性。
 
-\section{Exponentials and Algebraic Data Types}
+\section{指数对象与代数数据类型}
 
-The interpretation of function types as exponentials fits very well into
-the scheme of algebraic data types. It turns out that all the basic
-identities from high-school algebra relating numbers zero and one, sums,
-products, and exponentials hold pretty much unchanged in any bicartesian
-closed category for, respectively, initial and final objects,
-coproducts, products, and exponentials. We don't have the tools yet to
-prove them (such as adjunctions or the Yoneda lemma), but I'll list them
-here nevertheless as a source of valuable intuitions.
+将函数类型解释为指数对象非常符合 algebraic data types (\acronym{ADT}, 代数数据类型) 的体系。事实证明，所有高中代数中关于数字零和一、和、积、指数的基本恒等式，在任何双笛卡尔闭范畴中，对于初始对象和终结对象、余积、积和指数对象，几乎都保持不变。我们还没有工具来证明它们（例如 adjunctions (伴随) 或 the Yoneda lemma (米田引理)），但我还是会在这里列出它们，作为宝贵直觉的来源。
 
-\subsection{Zeroth Power}
+\subsection{零次幂}
 
 \[a^{0} = 1\]
-In the categorical interpretation, we replace 0 with the initial object,
-1 with the final object, and equality with isomorphism. The exponential
-is the internal hom-object. This particular exponential represents the
-set of morphisms going from the initial object to an arbitrary object
-$a$. By the definition of the initial object, there is exactly
-one such morphism, so the hom-set $\cat{C}(0, a)$ is a singleton set. A
-singleton set is the terminal object in $\Set$, so this identity
-trivially works in $\Set$. What we are saying is that it works in
-any bicartesian closed category.
+在范畴解释中，我们将 0 替换为初始对象，1 替换为终结对象，等号替换为 isomorphism (同构)。指数对象是内部态射对象。这个特定的指数对象表示从初始对象到任意对象 $a$ 的态射集合。根据初始对象的定义，恰好存在一个这样的态射，因此态射集合 $\cat{C}(0, a)$ 是一个 singleton set (单例集)。单例集是 $\Set$ 中的终结对象，所以这个恒等式在 $\Set$ 中是平凡成立的。我们想说的是，它在任何双笛卡尔闭范畴中都成立。
 
-In Haskell, we replace 0 with \code{Void}; 1 with the unit type
-\code{()}; and the exponential with function type. The claim is that
-the set of functions from \code{Void} to any type \code{a} is
-equivalent to the unit type --- which is a singleton. In other words,
-there is only one function \code{Void -> a}. We've seen
-this function before: it's called \code{absurd}.
+在 Haskell 中，我们将 0 替换为 \code{Void}；1 替换为单位类型 \code{()}；指数对象替换为函数类型。这个断言是说，从 \code{Void} 到任何类型 \code{a} 的函数集合等价于单位类型——这是一个单例。换句话说，只有一个函数 \code{Void -> a}。我们以前见过这个函数：它叫做 \code{absurd}。
 
-This is a little bit tricky, for two reasons. One is that in Haskell we
-don't really have uninhabited types --- every type contains the ``result
-of a never ending calculation,'' or the bottom. The second reason is
-that all implementations of \code{absurd} are equivalent because, no
-matter what they do, nobody can ever execute them. There is no value
-that can be passed to \code{absurd}. (And if you manage to pass it a
-never ending calculation, it will never return!)
+这有点棘手，原因有二。一是在 Haskell 中我们并没有真正 uninhabited types (空类型)——每个类型都包含“永不结束的计算结果”，即 bottom (底值)。第二个原因是 \code{absurd} 的所有实现都是等价的，因为无论它们做什么，都没有人能够执行它们。没有值可以传递给 \code{absurd}。（如果你设法给它传递一个永不结束的计算，它将永远不会返回！）
 
-\subsection{Powers of One}
+\subsection{一的幂}
 
 \[1^{a} = 1\]
-This identity, when interpreted in $\Set$, restates the definition
-of the terminal object: There is a unique morphism from any object to
-the terminal object. In general, the internal hom-object from $a$
-to the terminal object is isomorphic to the terminal object itself.
+这个恒等式，在 $\Set$ 中解释时，重申了终结对象的定义：从任何对象到终结对象存在唯一的态射。一般来说，从 $a$ 到终结对象的内部态射对象与终结对象本身同构。
 
-In Haskell, there is only one function from any type \code{a} to unit.
-We've seen this function before --- it's called \code{unit}. You can
-also think of it as the function \code{const} partially applied to
-\code{()}.
+在 Haskell 中，从任何类型 \code{a} 到单位类型只有一个函数。我们以前见过这个函数——它叫做 \code{unit}。你也可以把它看作是部分应用于 \code{()} 的函数 \code{const}。
 
-\subsection{First Power}
+\subsection{一次幂}
 
 \[a^{1} = a\]
-This is a restatement of the observation that morphisms from the
-terminal object can be used to pick ``elements'' of the object
-\code{a}. The set of such morphisms is isomorphic to the object
-itself. In $\Set$, and in Haskell, the isomorphism is between
-elements of the set \code{a} and functions that pick those elements,
-\code{() -> a}.
+这是对以下观察的重述：从终结对象出发的态射可以用来挑选对象 \code{a} 的“元素”。这类态射的集合与对象本身同构。在 $\Set$ 中，以及在 Haskell 中，同构存在于集合 \code{a} 的元素与挑选这些元素的函数 \code{() -> a} 之间。
 
-\subsection{Exponentials of Sums}
+\subsection{和的指数}
 
 \[a^{b+c} = a^{b} \times a^{c}\]
-Categorically, this says that the exponential from a coproduct of two
-objects is isomorphic to a product of two exponentials. In Haskell, this
-algebraic identity has a very practical interpretation. It tells us
-that a function from a sum of two types is equivalent to a pair of
-functions from individual types. This is just the case analysis that we
-use when defining functions on sums. Instead of writing one function
-definition with a \code{case} statement, we usually split it into two
-(or more) functions dealing with each type constructor separately. For
-instance, take a function from the sum type
-\code{(Either Int Double)}:
+范畴上，这表示从两个对象的 coproduct (余积) 出发的指数对象同构于两个指数对象的 product (积)。在 Haskell 中，这个代数恒等式有一个非常实际的解释。它告诉我们，一个来自两个类型的和的函数等价于一对分别来自单个类型的函数。这正是我们在定义和类型上的函数时使用的 case analysis (情况分析)。我们通常不写一个带有 \code{case} 语句的函数定义，而是将其拆分为两个（或更多）分别处理每个类型构造器的函数。例如，考虑一个来自 sum type (和类型) \code{(Either Int Double)} 的函数：
 
 \src{snippet10}
-It may be defined as a pair of functions from, respectively,
-\code{Int} and \code{Double}:
+它可以被定义为一对分别来自 \code{Int} 和 \code{Double} 的函数：
 
 \src{snippet11}
-Here, \code{n} is an \code{Int} and \code{x} is a \code{Double}.
+这里，\code{n} 是一个 \code{Int}，\code{x} 是一个 \code{Double}。
 
-\subsection{Exponentials of Exponentials}
+\subsection{指数的指数}
 
 \[(a^{b})^{c} = a^{b \times c}\]
-This is just a way of expressing currying purely in terms of exponential
-objects. A function returning a function is equivalent to a function
-from a product (a two-argument function).
+这只是纯粹用指数对象来表达 currying (柯里化) 的一种方式。一个返回函数的函数等价于一个来自积的函数（一个双参数函数）。
 
-\subsection{Exponentials over Products}
+\subsection{积上的指数}
 
 \[(a \times b)^{c} = a^{c} \times b^{c}\]
-In Haskell: A function returning a pair is equivalent to a pair of
-functions, each producing one element of the pair.
+在 Haskell 中：一个返回序对的函数等价于一对函数，每个函数产生序对的一个元素。
 
-It's pretty incredible how those simple high-school algebraic identities
-can be lifted to category theory and have practical application in
-functional programming.
+这些简单的高中代数恒等式能够被提升到范畴论并在函数式编程中得到实际应用，真是令人难以置信。
 
-\section{Curry-Howard Isomorphism}
+\section{柯里-霍华德同构}
 
-I have already mentioned the correspondence between logic and algebraic
-data types. The \code{Void} type and the unit type \code{()}
-correspond to false and true. Product types and sum types correspond to
-logical conjunction $\wedge$ (AND) and disjunction $\vee$ (OR). In this scheme, the
-function type we have just defined corresponds to logical implication $\Rightarrow$.
-In other words, the type \code{a -> b} can be read as ``if
-a then b.''
+我已经提到了 logic (逻辑) 和代数数据类型之间的对应关系。\code{Void} 类型和单位类型 \code{()} 对应于假和真。积类型和和类型对应于逻辑 conjunction (合取) $\wedge$ (AND) 和 disjunction (析取) $\vee$ (OR)。在这个体系中，我们刚刚定义的函数类型对应于逻辑 implication (蕴含) $\Rightarrow$。换句话说，类型 \code{a -> b} 可以读作“如果 a 则 b”。
 
-According to the Curry-Howard isomorphism, every type can be interpreted
-as a proposition --- a statement or a judgment that may be true or
-false. Such a proposition is considered true if the type is inhabited
-and false if it isn't. In particular, a logical implication is true if
-the function type corresponding to it is inhabited, which means that
-there exists a function of that type. An implementation of a function is
-therefore a proof of a theorem. Writing programs is equivalent to
-proving theorems. Let's see a few examples.
+根据 the Curry-Howard isomorphism (柯里-霍华德同构)，每个类型都可以被解释为一个 proposition (命题)——一个可能为真或为假的陈述或判断。如果该类型是 inhabited (有居民的)，则该命题被认为是真，如果不是，则为假。特别是，如果对应的函数类型是有居民的，则逻辑蕴含为真，这意味着存在该类型的函数。因此，一个函数的实现就是一个 theorem (定理) 的证明。编写程序等价于证明定理。让我们看几个例子。
 
-Let's take the function \code{eval} we have introduced in the
-definition of the function object. Its signature is:
+让我们以我们在函数对象的定义中引入的函数 \code{eval} 为例。它的签名是：
 
 \src{snippet12}
-It takes a pair consisting of a function and its argument and produces a
-result of the appropriate type. It's the Haskell implementation of the
-morphism:
+它接受一个由函数及其参数组成的序对，并产生适当类型的结果。它是态射的 Haskell 实现：
 
 \[\mathit{eval} \Colon (a \Rightarrow b) \times a \to b\]
-which defines the function type $a \Rightarrow b$ (or the exponential object
-$b^{a}$). Let's translate this signature to a logical predicate
-using the Curry-Howard isomorphism:
+它定义了函数类型 $a \Rightarrow b$（或指数对象 $b^{a}$）。让我们使用柯里-霍华德同构将这个签名翻译成逻辑谓词：
 
 \[((a \Rightarrow b) \wedge a) \Rightarrow b\]
-Here's how you can read this statement: If it's true that $b$
-follows from $a$, and $a$ is true, then $b$ must be
-true. This makes perfect intuitive sense and has been known since
-antiquity as \newterm{modus ponens}. We can prove this theorem by
-implementing the function:
+你可以这样解读这个陈述：如果 $b$ 从 $a$ 推出为真，并且 $a$ 为真，那么 $b$ 必定为真。这在直觉上完全说得通，并且自古以来就以 \newterm{modus ponens} (肯定前件) 而闻名。我们可以通过实现以下函数来证明这个定理：
 
 \src{snippet13}
-If you give me a pair consisting of a function \code{f} taking
-\code{a} and returning \code{b}, and a concrete value \code{x} of
-type \code{a}, I can produce a concrete value of type \code{b} by
-simply applying the function \code{f} to \code{x}. By implementing
-this function I have just shown that the type
-\code{((a -> b), a) -> b} is inhabited.
-Therefore \newterm{modus ponens} is true in our logic.
+如果你给我一个由函数 \code{f}（接受 \code{a} 返回 \code{b}）和一个 \code{a} 类型的具体值 \code{x} 组成的序对，我可以通过简单地将函数 \code{f} 应用于 \code{x} 来产生一个 \code{b} 类型的具体值。通过实现这个函数，我刚刚证明了类型 \code{((a -> b), a) -> b} 是有居民的。因此，在我们的逻辑中，肯定前件是真。
 
-How about a predicate that is blatantly false? For instance: if
-$a$ or $b$ is true then $a$ must be true.
+那么一个明显错误的谓词呢？例如：如果 $a$ 或 $b$ 为真，那么 $a$ 必须为真。
 
 \[a \vee b \Rightarrow a\]
-This is obviously wrong because you can choose an $a$ that is
-false and a $b$ that is true, and that's a counter-example.
+这显然是错误的，因为你可以选择一个假的 $a$ 和一个真的 $b$，这就是一个反例。
 
-Mapping this predicate into a function signature using the Curry-Howard
-isomorphism, we get:
+使用柯里-霍华德同构将这个谓词映射到函数签名，我们得到：
 
 \src{snippet14}
-Try as you may, you can't implement this function --- you can't produce
-a value of type \code{a} if you are called with the \code{Right}
-value. (Remember, we are talking about \emph{pure} functions.)
+无论你怎么尝试，你都无法实现这个函数——如果你被调用时传入的是 \code{Right} 值，你就无法产生一个 \code{a} 类型的值。（记住，我们讨论的是 \emph{pure} (纯) 函数。）
 
-Finally, we come to the meaning of the \code{absurd} function:
+最后，我们来看 \code{absurd} 函数的含义：
 
 \src{snippet15}
-Considering that \code{Void} translates into false, we get:
+考虑到 \code{Void} 翻译为假，我们得到：
 
 \[\mathit{false} \Rightarrow a\]
-Anything follows from falsehood (\emph{ex falso quodlibet}). Here's one
-possible proof (implementation) of this statement (function) in Haskell:
+Anything follows from falsehood (从假推导出任意命题，\emph{ex falso quodlibet})。以下是这个陈述（函数）在 Haskell 中的一个可能证明（实现）：
 
 \begin{snip}{haskell}
 absurd (Void a) = absurd a
 \end{snip}
-where \code{Void} is defined as:
+其中 \code{Void} 定义为：
 
 \begin{snip}{haskell}
 newtype Void = Void Void
 \end{snip}
-As always, the type \code{Void} is tricky. This definition makes it
-impossible to construct a value because in order to construct one, you
-would need to provide one. Therefore, the function \code{absurd} can
-never be called.
+像往常一样，\code{Void} 类型很棘手。这个定义使得无法构造一个值，因为为了构造一个值，你需要提供一个值。因此，函数 \code{absurd} 永远不会被调用。
 
-These are all interesting examples, but is there a practical side to
-Curry-Howard isomorphism? Probably not in everyday programming. But
-there are programming languages like Agda or Coq, which take advantage
-of the Curry-Howard isomorphism to prove theorems.
+这些都是有趣的例子，但柯里-霍华德同构有实际应用吗？可能在日常编程中没有。但是有一些编程语言，如 Agda 或 Coq，利用柯里-霍华德同构来证明定理。
 
-Computers are not only helping mathematicians do their work --- they are
-revolutionizing the very foundations of mathematics. The latest hot
-research topic in that area is called Homotopy Type Theory, and is an
-outgrowth of type theory. It's full of Booleans, integers, products and
-coproducts, function types, and so on. And, as if to dispel any doubts,
-the theory is being formulated in Coq and Agda. Computers are
-revolutionizing the world in more than one way.
+计算机不仅在帮助数学家完成工作——它们正在彻底改变数学的基础本身。该领域最新的热门研究课题称为 Homotopy Type Theory (同伦类型论)，是 type theory (类型论) 的一个分支。它充满了布尔值、整数、积和余积、函数类型等等。而且，仿佛是为了消除任何疑虑，该理论正在用 Coq 和 Agda 来构建。计算机正在以不止一种方式彻底改变世界。
 
-\section{Bibliography}
+\section{参考文献}
 
 \begin{enumerate}
   \tightlist
   \item
         Ralf Hinze, Daniel W. H. James,
         \urlref{http://www.cs.ox.ac.uk/ralf.hinze/publications/WGP10.pdf}{Reason
-          Isomorphically!}. This paper contains proofs of all those high-school
-        algebraic identities in category theory that I mentioned in this
-        chapter.
+          Isomorphically!}。这篇论文包含了本章提到的所有那些范畴论中的高中代数恒等式的证明。
 \end{enumerate}

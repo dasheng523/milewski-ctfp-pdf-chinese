@@ -1,102 +1,43 @@
 % !TEX root = ../../ctfp-print.tex
 
-\lettrine[lhang=0.17]{I}{n the first part} of the book I argued that both category theory and
-programming are about composability. In programming, you keep
-decomposing a problem until you reach the level of detail that you can
-deal with, solve each subproblem in turn, and re-compose the solutions
-bottom-up. There are, roughly speaking, two ways of doing it: by telling
-the computer what to do, or by telling it how to do it. One is called
-declarative and the other imperative.
+\lettrine[lhang=0.17]{在}{本书的第一部分}，我论证了范畴论和编程都关乎 composability (可组合性)。在编程中，你不断地分解问题，直到达到你可以处理的细节层次，然后依次解决每个子问题，并自底向上地重新组合解决方案。粗略地说，有两种方法可以做到这一点：通过告诉计算机要做什么，或者通过告诉它如何做。一种被称为 declarative (声明式)，另一种被称为 imperative (命令式)。
 
-You can see this even at the most basic level. Composition itself may be
-defined declaratively; as in, \code{h} is a composite of \code{g}
-after \code{f}:
+即使在最基础的层面上你也能看到这一点。组合本身可以被声明式地定义；例如，\code{h} 是 \code{g} 在 \code{f} 之后的复合：
 
 \src{snippet01}
-or imperatively; as in, call \code{f} first, remember the result of
-that call, then call \code{g} with the result:
+或者命令式地定义；例如，先调用 \code{f}，记住该调用的结果，然后用该结果调用 \code{g}：
 
 \src{snippet02}
-The imperative version of a program is usually described as a sequence
-of actions ordered in time. In particular, the call to \code{g} cannot
-happen before the execution of \code{f} completes. At least, that's
-the conceptual picture --- in a lazy language, with \emph{call-by-need}
-argument passing, the actual execution may proceed differently.
+程序的命令式版本通常被描述为按时间顺序排列的一系列动作。特别是，对 \code{g} 的调用不能在 \code{f} 执行完成之前发生。至少，这是概念上的图景——在惰性语言中，使用 \emph{call-by-need} (按需调用) 的参数传递方式，实际执行可能会有所不同。
 
-In fact, depending on the cleverness of the compiler, there may be
-little or no difference between how declarative and imperative code is
-executed. But the two methodologies differ, sometimes drastically, in
-the way we approach problem solving and in the maintainability and
-testability of the resulting code.
+事实上，根据编译器的智能程度，声明式代码和命令式代码的执行方式可能几乎没有区别。但这两种方法论在解决问题的方式以及最终代码的可维护性和可测试性方面，有时会存在显著差异。
 
-The main question is: when faced with a problem, do we always have the
-choice between a declarative and imperative approaches to solving it?
-And, if there is a declarative solution, can it always be translated
-into computer code? The answer to this question is far from obvious and,
-if we could find it, we would probably revolutionize our understanding
-of the universe.
+主要问题是：当面对一个问题时，我们是否总能在声明式和命令式方法之间做出选择来解决它？并且，如果存在声明式解决方案，它是否总能被翻译成计算机代码？这个问题的答案远非显而易见，如果我们能找到它，我们可能会彻底改变对宇宙的理解。
 
 \begin{wrapfigure}{R}{0pt}
   \includegraphics[width=0.5\textwidth]{images/asteroids.png}
 \end{wrapfigure}
 
-Let me elaborate. There is a similar duality in physics, which either
-points at some deep underlying principle, or tells us something about
-how our minds work. Richard Feynman mentions this duality as an
-inspiration in his own work on quantum electrodynamics.
+让我详细说明一下。物理学中也存在类似的二元性，这要么指向某个深层的基础原理，要么告诉我们一些关于我们思维方式的东西。理查德·费曼 (Richard Feynman) 提到这种二元性是他研究量子电动力学 (quantum electrodynamics) 的灵感来源。
 
-There are two forms of expressing most laws of physics. One uses local,
-or infinitesimal, considerations. We look at the state of a system
-around a small neighborhood, and predict how it will evolve within the
-next instant of time. This is usually expressed using differential
-equations that have to be integrated, or summed up, over a period of
-time.
+表达大多数物理定律有两种形式。一种使用 local (局部的) 或 infinitesimal (无穷小的) 考量。我们观察系统在一个小邻域周围的状态，并预测它在下一个瞬间将如何演化。这通常用 differential equations (微分方程) 来表达，这些方程必须在一个时间段内进行 integrate (积分) 或求和。
 
-Notice how this approach resembles imperative thinking: we reach the
-final solution by following a sequence of small steps, each depending on
-the result of the previous one. In fact, computer simulations of
-physical systems are routinely implemented by turning differential
-equations into difference equations and iterating them. This is how
-spaceships are animated in the asteroids game. At each time step, the
-position of a spaceship is changed by adding a small increment, which is
-calculated by multiplying its velocity by the time delta. The velocity,
-in turn, is changed by a small increment proportional to acceleration,
-which is given by force divided by mass.
+注意这种方法与命令式思维的相似之处：我们通过遵循一系列小步骤来达到最终解决方案，每一步都依赖于前一步的结果。事实上，物理系统的计算机模拟通常是通过将微分方程转化为差分方程并进行迭代来实现的。这就是“小行星”游戏中飞船动画的制作方式。在每个时间步长，飞船的位置通过加上一个小增量来改变，该增量是通过将其速度乘以时间增量来计算的。速度又通过一个与加速度成比例的小增量来改变，加速度由力除以质量给出。
 
-These are the direct encodings of the differential equations
-corresponding to Newton's laws of motion:
+这些是对应于 Newton's laws of motion (牛顿运动定律) 的微分方程的直接编码：
 \begin{align*}
   F & = m \frac{dv}{dt} \\
   v & = \frac{dx}{dt}
 \end{align*}
-Similar methods may be applied to more complex problems, like the
-propagation of electromagnetic fields using Maxwell's equations, or even
-the behavior of quarks and gluons inside a proton using lattice \acronym{QCD}
-(quantum chromodynamics).
+类似的方法可以应用于更复杂的问题，例如使用 Maxwell's equations (麦克斯韦方程组) 的电磁场传播，甚至使用 lattice \acronym{QCD} (格点 QCD (量子色动力学)) 的质子内部夸克和胶子的行为。
 
-This local thinking combined with discretization of space and time that
-is encouraged by the use of digital computers found its extreme
-expression in the heroic attempt by Stephen Wolfram to reduce the
-complexity of the whole universe to a system of cellular automata.
+这种局部思维结合了由数字计算机所鼓励的空间和时间离散化，在斯蒂芬·沃尔夫勒姆 (Stephen Wolfram) 试图将整个宇宙的复杂性简化为 cellular automata (元胞自动机) 系统的英勇尝试中达到了极致。
 
-The other approach is global. We look at the initial and the final state
-of the system, and calculate a trajectory that connects them by
-minimizing a certain functional. The simplest example is the Fermat's
-principle of least time. It states that light rays propagate along paths
-that minimize their flight time. In particular, in the absence of
-reflecting or refracting objects, a light ray from point $A$ to point $B$
-will take the shortest path, which is a straight line. But light
-propagates slower in dense (transparent) materials, like water or glass.
-So if you pick the starting point in the air, and the ending point under
-water, it's more advantageous for light to travel longer in the air and
-then take a shortcut through water. The path of minimum time makes the
-ray refract at the boundary of air and water, resulting in Snell's law
-of refraction:
+另一种方法是 global (全局的)。我们观察系统的初始状态和最终状态，并通过最小化某个 functional (泛函) 来计算连接它们的轨迹。最简单的例子是 Fermat's principle of least time (费马最短时间原理)。它指出光线沿着使其传播时间最小化的路径传播。特别地，在没有反射或 refracting (折射) 物体的情况下，从点 $A$ 到点 $B$ 的光线将走最短路径，即直线。但是光在密集（透明）介质（如水或玻璃）中传播得更慢。因此，如果你在空气中选择起点，在水下选择终点，光线在空气中传播更长距离然后通过水走捷径会更有利。最小时间路径使光线在空气和水的边界处发生折射，从而产生 Snell's law (斯涅尔定律) of refraction (折射)：
 \begin{equation*}
   \frac{sin(\theta_1)}{sin(\theta_2)} = \frac{v_1}{v_2}
 \end{equation*}
-where $v_1$ is the speed of light in the air and $v_2$ is
-the speed of light in the water.
+其中 $v_1$ 是光在空气中的速度，$v_2$ 是光在水中的速度。
 
 \begin{figure}[H]
   \centering
@@ -104,16 +45,7 @@ the speed of light in the water.
 \end{figure}
 
 \noindent
-All of classical mechanics can be derived from the principle of least
-action. The action can be calculated for any trajectory by integrating
-the Lagrangian, which is the difference between kinetic and potential
-energy (notice: it's the difference, not the sum --- the sum would be
-the total energy). When you fire a mortar to hit a given target, the
-projectile will first go up, where the potential energy due to gravity
-is higher, and spend some time there racking up negative contribution to
-the action. It will also slow down at the top of the parabola, to
-minimize kinetic energy. Then it will speed up to go quickly through the
-area of low potential energy.
+所有的经典力学都可以从 the principle of least action (最小作用量原理) 推导出来。作用量可以通过对 Lagrangian (拉格朗日量)（即 kinetic energy (动能) 和 potential energy (势能) 之差——注意：是差而不是和，和是总能量）进行积分来计算任何轨迹的作用量。当你发射迫击炮击中给定目标时，炮弹会首先上升，到达重力势能较高的地方，并在那里停留一段时间，为作用量贡献负值。它也会在抛物线顶点减速，以最小化动能。然后它会加速以快速通过低势能区域。
 
 \begin{figure}[H]
   \centering
@@ -121,11 +53,7 @@ area of low potential energy.
 \end{figure}
 
 \noindent
-Feynman's greatest contribution was to realize that the principle of
-least action can be generalized to quantum mechanics. There, again, the
-problem is formulated in terms of initial state and final state. The
-Feynman path integral between those states is used to calculate the
-probability of transition.
+费曼最大的贡献是认识到最小作用量原理可以推广到量子力学。在那里，问题再次根据初始状态和最终状态来表述。这些状态之间的 the Feynman path integral (费曼路径积分) 用于计算跃迁概率。
 
 \begin{figure}[H]
   \centering
@@ -133,51 +61,15 @@ probability of transition.
 \end{figure}
 
 \noindent
-The point is that there is a curious unexplained duality in the way we
-can describe the laws of physics. We can use the local picture, in which
-things happen sequentially and in small increments. Or we can use the
-global picture, where we declare the initial and final conditions, and
-everything in between just follows.
+关键在于，我们描述物理定律的方式中存在一种奇特的、无法解释的二元性。我们可以使用局部的图景，其中事物按顺序以小增量发生。或者我们可以使用全局的图景，我们声明初始和最终条件，而中间的一切都随之确定。
 
-The global approach can be also used in programming, for instance when
-implementing ray tracing. We declare the position of the eye and the
-positions of light sources, and figure out the paths that the light rays
-may take to connect them. We don't explicitly minimize the time of
-flight for each ray, but we do use Snell's law and the geometry of
-reflection to the same effect.
+全局方法也可以用于编程，例如在实现 ray tracing (光线追踪) 时。我们声明眼睛的位置和光源的位置，并找出光线可能连接它们的路径。我们没有明确地最小化每条光线的传播时间，但我们确实使用了斯涅尔定律和反射几何来达到同样的效果。
 
-The biggest difference between the local and the global approach is in
-their treatment of space and, more importantly, time. The local approach
-embraces the immediate gratification of here and now, whereas the global
-approach takes a long-term static view, as if the future had been
-preordained, and we were only analyzing the properties of some eternal
-universe.
+局部方法和全局方法之间最大的区别在于它们对空间，更重要的是对时间的处理方式。局部方法拥抱此时此地的即时满足感，而全局方法则采取长期的静态视角，仿佛未来早已注定，我们只是在分析某个永恒宇宙的属性。
 
-Nowhere is it better illustrated than in the Functional Reactive
-Programming (\acronym{FRP}) approach to user interaction. Instead of writing separate
-handlers for every possible user action, all having access to some
-shared mutable state, \acronym{FRP} treats external events as an infinite list,
-and applies a series of transformations to it. Conceptually, the list of
-all our future actions is there, available as the input data to our
-program. From a program's perspective there's no difference between the
-list of digits of $\pi$, a list of pseudo-random numbers, or a list of mouse
-positions coming through computer hardware. In each case, if you want to
-get the $n^\text{th}$ item, you have to first go through the first $n-1$ items. When
-applied to temporal events, we call this property \emph{causality}.
+这一点在 Functional Reactive Programming (\acronym{FRP}, 函数式反应编程) 处理用户交互的方法中得到了最好的体现。与为每个可能的用户操作编写单独的处理程序（所有处理程序都可以访问某个共享的 mutable state (可变状态)）不同，\acronym{FRP} 将外部事件视为一个 infinite list (无限列表)，并对其应用一系列转换。从概念上讲，我们所有未来操作的列表就在那里，作为我们程序的输入数据可用。从程序的角度来看，$\pi$ 的数字列表、伪随机数列表或通过计算机硬件传入的鼠标位置列表之间没有区别。在每种情况下，如果你想获得第 $n$ 项，你必须首先遍历前 $n-1$ 项。当应用于时间事件时，我们将此属性称为 \emph{causality} (因果性)。
 
-So what does it have to do with category theory? I will argue that
-category theory encourages a global approach and therefore supports
-declarative programming. First of all, unlike calculus, it has no
-built-in notion of distance, or neighborhood, or time. All we have is
-abstract objects and abstract connections between them. If you can get
-from $A$ to $B$ through a series of steps, you can also get there in one
-leap. Moreover, the major tool of category theory is the universal
-construction, which is the epitome of a global approach. We've seen it
-in action, for instance, in the definition of the categorical product.
-It was done by specifying its properties --- a very declarative
-approach. It's an object equipped with two projections, and it's the
-best such object --- it optimizes a certain property: the property of
-factorizing the projections of other such objects.
+那么这与 category theory (范畴论) 有什么关系呢？我认为范畴论鼓励全局方法，因此支持声明式编程。首先，与微积分不同，它没有内置的距离、邻域或时间概念。我们只有抽象的对象和它们之间的抽象连接。如果你可以通过一系列步骤从 $A$ 到达 $B$，你也可以一步到位。此外，范畴论的主要工具是 universal construction (泛构造)，它是全局方法的缩影。我们已经看到它在范畴积定义中的作用。它是通过指定其属性来完成的——一种非常声明式的方法。它是一个配备了两个 projections (投影) 的对象，并且是最好的此类对象——它优化了某个属性：因子分解其他此类对象的投影的属性。
 
 \begin{figure}[H]
   \centering
@@ -185,25 +77,10 @@ factorizing the projections of other such objects.
 \end{figure}
 
 \noindent
-Compare this with Fermat's principle of minimum time, or the principle
-of least action.
+将此与费马最小时间原理或最小作用量原理进行比较。
 
-Conversely, contrast this with the traditional definition of a Cartesian
-product, which is much more imperative. You describe how to create an
-element of the product by picking one element from one set and another
-element from another set. It's a recipe for creating a pair. And there's
-another for disassembling a pair.
+反过来，将其与笛卡尔积的传统定义进行对比，后者更具命令式。你描述如何通过从一个集合中选择一个元素并从另一个集合中选择另一个元素来创建积的一个元素。这是一个创建 pair (序对) 的配方。还有另一个用于分解序对的配方。
 
-In almost every programming language, including functional languages
-like Haskell, product types, coproduct types, and function types are
-built in, rather than being defined by universal constructions; although
-there have been attempts at creating categorical programming languages
-(see, e.g.,
-\urlref{http://web.sfc.keio.ac.jp/~hagino/thesis.pdf}{Tatsuya
-  Hagino's thesis}).
+在几乎所有的编程语言中，包括像 Haskell 这样的函数式语言，product types (积类型)、coproduct types (余积类型) 和 function types (函数类型) 都是内置的，而不是通过泛构造定义的；尽管有过创建 categorical programming languages (范畴式编程语言) 的尝试（例如，参见 \urlref{http://web.sfc.keio.ac.jp/~hagino/thesis.pdf}{Tatsuya Hagino 的论文}）。
 
-Whether used directly or not, categorical definitions justify
-pre-existing programming constructs, and give rise to new ones. Most
-importantly, category theory provides a meta-language for reasoning
-about computer programs at a declarative level. It also encourages
-reasoning about problem specification before it is cast into code.
+无论是否直接使用，范畴定义都为预先存在的编程构造提供了理由，并催生了新的构造。最重要的是，范畴论提供了一种用于在声明式层面上推理计算机程序的 meta-language (元语言)。它还鼓励在将问题规范转化为代码之前对其进行推理。

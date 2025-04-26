@@ -1,44 +1,20 @@
 % !TEX root = ../../ctfp-print.tex
 
-\lettrine[lhang=0.17]{W}{e've seen previously} that, when we fix an object $a$ in the
-category $\cat{C}$, the mapping $\cat{C}(a, -)$ is a (covariant)
-functor from $\cat{C}$ to $\Set$.
+\lettrine[lhang=0.17]{我}{们之前已经看到}，当我们在范畴 $\cat{C}$ 中固定一个对象 $a$ 时，映射 $\cat{C}(a, -)$ 是一个从 $\cat{C}$ 到 $\Set$ 的（协变）函子 (covariant functor)。
 \[x \to \cat{C}(a, x)\]
-(The codomain is $\Set$ because the hom-set $\cat{C}(a, x)$ is a
-\emph{set}.) We call this mapping a hom-functor --- we have previously
-defined its action on morphisms as well.
+（其陪域 (codomain) 是 $\Set$，因为 hom-集 (hom-set) $\cat{C}(a, x)$ 是一个 \emph{集合}。）我们称这个映射为 hom-函子 (hom-functor)——我们之前也定义了它在态射 (morphisms) 上的作用。
 
-Now let's vary $a$ in this mapping. We get a new mapping that
-assigns the hom-\emph{functor} $\cat{C}(a, -)$ to any $a$.
+现在让我们在这个映射中改变 $a$。我们得到一个新的映射，它将 hom-\emph{函子} $\cat{C}(a, -)$ 赋给任意 $a$。
 \[a \to \cat{C}(a, -)\]
-It's a mapping of objects from category $\cat{C}$ to functors, which are
-\emph{objects} in the functor category (see the section about functor
-categories in
-\hyperref[natural-transformations]{Natural
-  Transformations}). Let's use the notation $[\cat{C}, \Set]$ for the
-functor category from $\cat{C}$ to $\Set$. You may also recall that
-hom-functors are the prototypical
-\hyperref[representable-functors]{representable
-  functors}.
+这是一个从范畴 $\cat{C}$ 的对象到函子的映射，而函子是函子范畴 (functor category) 中的 \emph{对象}（参见 \hyperref[natural-transformations]{自然变换} 中关于函子范畴的部分）。让我们使用记号 $[\cat{C}, \Set]$ 来表示从 $\cat{C}$ 到 $\Set$ 的函子范畴。你可能还记得 hom-函子是典型的 \hyperref[representable-functors]{可表示函子 (representable functors)}。
 
-Every time we have a mapping of objects between two categories, it's
-natural to ask if such a mapping is also a functor. In other words
-whether we can lift a morphism from one category to a morphism in the
-other category. A morphism in $\cat{C}$ is just an element of
-$\cat{C}(a, b)$, but a morphism in the functor category
-$[\cat{C}, \Set]$ is a natural transformation. So we are looking
-for a mapping of morphisms to natural transformations.
+每当我们在两个范畴之间有一个对象的映射时，很自然地会问这个映射是否也是一个函子。换句话说，我们是否可以将一个范畴中的态射提升 (lift) 为另一个范畴中的态射。$\cat{C}$ 中的态射只是 $\cat{C}(a, b)$ 的一个元素，但函子范畴 $[\cat{C}, \Set]$ 中的态射是一个自然变换 (natural transformation)。所以我们在寻找一个从态射到自然变换的映射。
 
-Let's see if we can find a natural transformation corresponding to a
-morphism $f \Colon a \to b$. First, lets see what
-$a$ and $b$ are mapped to. They are mapped to two
-functors: $\cat{C}(a, -)$ and $\cat{C}(b, -)$. We need a natural
-transformation between those two functors.
+让我们看看是否能找到一个对应于态射 $f \Colon a \to b$ 的自然变换。首先，让我们看看 $a$ 和 $b$ 被映射到了什么。它们被映射到两个函子：$\cat{C}(a, -)$ 和 $\cat{C}(b, -)$。我们需要这两个函子之间的一个自然变换。
 
-And here's the trick: we use the Yoneda lemma:
+这里的技巧是：我们使用 Yoneda 引理 (Yoneda lemma)：
 \[[\cat{C}, \Set](\cat{C}(a, -), F) \cong F a\]
-and replace the generic $F$ with the hom-functor
-$\cat{C}(b, -)$. We get:
+并将泛型 (generic) $F$ 替换为 hom-函子 $\cat{C}(b, -)$。我们得到：
 \[[\cat{C}, \Set](\cat{C}(a, -), \cat{C}(b, -)) \cong \cat{C}(b, a)\]
 \begin{figure}[H]
   \centering
@@ -46,11 +22,7 @@ $\cat{C}(b, -)$. We get:
 \end{figure}
 
 \noindent
-This is exactly the natural transformation between the two hom-functors
-we were looking for, but with a little twist: We have a mapping between
-a natural transformation and a morphism --- an element of
-$\cat{C}(b, a)$ --- that goes in the ``wrong'' direction. But that's
-okay; it only means that the functor we are looking at is contravariant.
+这正是我们寻找的两个 hom-函子之间的自然变换，但有一个小小的转折：我们有一个自然变换和一个态射——$\cat{C}(b, a)$ 的一个元素——之间的映射，但方向是“错误”的。但这没关系；这只意味着我们正在考察的函子是逆变的 (contravariant)。
 
 \begin{figure}[H]
   \centering
@@ -58,240 +30,101 @@ okay; it only means that the functor we are looking at is contravariant.
 \end{figure}
 
 \noindent
-Actually, we've got even more than we bargained for. The mapping from
-$\cat{C}$ to $[\cat{C}, \Set]$ is not only a contravariant functor
---- it is a \emph{fully faithful} functor. Fullness and faithfulness are
-properties of functors that describe how they map hom-sets.
+实际上，我们得到的比预期的还要多。从 $\cat{C}$ 到 $[\cat{C}, \Set]$ 的映射不仅是一个逆变函子——它还是一个 \emph{完全忠实} 函子 (fully faithful functor)。满性 (Fullness) 和忠实性 (faithfulness) 是描述函子如何映射 hom-集的性质。
 
-A \emph{faithful} functor is \newterm{injective} on hom-sets, meaning that
-it maps distinct morphisms to distinct morphisms. In other words, it
-doesn't coalesce them.
+一个 \emph{忠实} 函子 (faithful functor) 在 hom-集上是 \newterm{单射的 (injective)}，意味着它将不同的态射映射到不同的态射。换句话说，它不会合并它们。
 
-A \emph{full} functor is \newterm{surjective} on hom-sets, meaning that it
-maps one hom-set \emph{onto} the other hom-set, fully covering the
-latter.
+一个 \emph{满} 函子 (full functor) 在 hom-集上是 \newterm{满射的 (surjective)}，意味着它将一个 hom-集映射 \emph{到} 另一个 hom-集上，完全覆盖后者。
 
-A fully faithful functor $F$ is a \newterm{bijection} on hom-sets
---- a one to one matching of all elements of both sets. For every pair
-of objects $a$ and $b$ in the source category $\cat{C}$
-there is a bijection between $\cat{C}(a, b)$ and
-$\cat{D}(F a, F b)$, where $\cat{D}$ is the target category of
-$F$ (in our case, the functor category, $[\cat{C}, \Set]$).
-Notice that this doesn't mean that $F$ is a bijection on
-\emph{objects}. There may be objects in $\cat{D}$ that are not in the
-image of $F$, and we can't say anything about hom-sets for those
-objects.
+一个完全忠实函子 $F$ 在 hom-集上是 \newterm{双射 (bijection)}——两个集合所有元素的一一匹配。对于源范畴 $\cat{C}$ 中的每一对对象 $a$ 和 $b$，在 $\cat{C}(a, b)$ 和 $\cat{D}(F a, F b)$ 之间存在一个双射，其中 $\cat{D}$ 是 $F$ 的目标范畴（在我们的例子中，是函子范畴 $[\cat{C}, \Set]$）。注意这并不意味着 $F$ 在 \emph{对象} 上是双射。在 $\cat{D}$ 中可能存在不属于 $F$ 的像 (image) 的对象，对于那些对象，我们无法对 hom-集说任何话。
 
-\section{The Embedding}
+\section{嵌入}
 
-The (contravariant) functor we have just described, the functor that
-maps objects in $\cat{C}$ to functors in $[\cat{C}, \Set]$:
+我们刚刚描述的（逆变）函子，即那个将 $\cat{C}$ 中的对象映射到 $[\cat{C}, \Set]$ 中函子的函子：
 \[a \to \cat{C}(a, -)\]
-defines the \newterm{Yoneda embedding}. It \emph{embeds} a category
-$\cat{C}$ (strictly speaking, the category $\cat{C}^\mathit{op}$,
-because of contravariance) inside the functor category
-$[\cat{C}, \Set]$. It not only maps objects in $\cat{C}$ to
-functors, but also faithfully preserves all connections between them.
+定义了 \newterm{Yoneda 嵌入 (Yoneda embedding)}。它将范畴 $\cat{C}$（严格来说，是范畴 $\cat{C}^\mathit{op}$，因为它是逆变的）\emph{嵌入 (embeds)} 到函子范畴 $[\cat{C}, \Set]$ 内部。它不仅将 $\cat{C}$ 中的对象映射为函子，而且还忠实地保留了它们之间的所有连接。
 
-This is a very useful result because mathematicians know a lot about the
-category of functors, especially functors whose codomain is
-$\Set$. We can get a lot of insight about an arbitrary category
-$\cat{C}$ by embedding it in the functor category.
+这是一个非常有用的结果，因为数学家们对函子范畴了解很多，特别是那些陪域为 $\Set$ 的函子。通过将任意范畴 $\cat{C}$ 嵌入到函子范畴中，我们可以获得很多关于它的洞察。
 
-Of course there is a dual version of the Yoneda embedding, sometimes
-called the co-Yoneda embedding. Observe that we could have started by
-fixing the target object (rather than the source object) of each
-hom-set, $\cat{C}(-, a)$. That would give us a contravariant
-hom-functor. Contravariant functors from $\cat{C}$ to $\Set$ are
-our familiar presheaves (see, for instance,
-\hyperref[limits-and-colimits]{Limits
-  and Colimits}). The co-Yoneda embedding defines the embedding of a
-category $\cat{C}$ in the category of presheaves. Its action on morphisms
-is given by:
+当然，存在 Yoneda 嵌入的对偶 (dual) 版本，有时称为 co-Yoneda 嵌入 (co-Yoneda embedding)。观察一下，我们本可以从固定每个 hom-集的目标对象（而不是源对象）$\cat{C}(-, a)$ 开始。那会给我们一个逆变 hom-函子。从 $\cat{C}$ 到 $\Set$ 的逆变函子是我们熟悉的预层 (presheaves)（例如，参见 \hyperref[limits-and-colimits]{极限与余极限}）。co-Yoneda 嵌入定义了范畴 $\cat{C}$ 在预层范畴中的嵌入。它在态射上的作用由下式给出：
 \[[\cat{C}^\mathit{op}, \Set](\cat{C}(-, a), \cat{C}(-, b)) \cong \cat{C}(a, b)\]
-Again, mathematicians know a lot about the category of presheaves, so
-being able to embed an arbitrary category in it is a big win.
+同样，数学家们对预层范畴了解很多，因此能够将任意范畴嵌入其中是一个巨大的胜利。
 
-\section{Application to Haskell}
+\section{在 Haskell 中的应用}
 
-In Haskell, the Yoneda embedding can be represented as the isomorphism
-between natural transformations amongst reader functors on the one hand,
-and functions (going in the opposite direction) on the other hand:
+在 Haskell 中，Yoneda 嵌入可以表示为一方面是 reader 函子之间的自然变换，另一方面是（反方向的）函数之间的同构 (isomorphism)：
 
 \begin{snipv}
 forall x. (a -> x) -> (b -> x) \ensuremath{\cong} b -> a
 \end{snipv}
-(Remember, the reader functor is equivalent to
-\code{((->) a)}.)
+（请记住，reader 函子等价于 \code{((->) a)}。）
 
-The left hand side of this identity is a polymorphic function that,
-given a function from \code{a} to \code{x} and a value of type
-\code{b}, can produce a value of type \code{x} (I'm uncurrying ---
-dropping the parentheses around --- the function
-\code{b -> x}). The only way this can be done for all
-\code{x} is if our function knows how to convert a \code{b} to an
-\code{a}. It has to secretly have access to a function
-\code{b -> a}.
+这个等式的左边是一个多态函数，给定一个从 \code{a} 到 \code{x} 的函数和一个 \code{b} 类型的值，它可以产生一个 \code{x} 类型的值（我正在对函数 \code{b -> x} 进行 uncurrying——去掉周围的括号）。对于所有的 \code{x}，能够做到这一点的唯一方法是，我们的函数知道如何将一个 \code{b} 转换为一个 \code{a}。它必须秘密地能够访问一个函数 \code{b -> a}。
 
-Given such a converter, \code{btoa}, one can define the left hand
-side, call it \code{fromY}, as:
+给定这样一个转换器 \code{btoa}，可以定义左侧，称之为 \code{fromY}，如下：
 
 \src{snippet01}
-Conversely, given a function \code{fromY} we can recover the converter
-by calling \code{fromY} with the identity:
+反过来，给定一个函数 \code{fromY}，我们可以通过用恒等函数 (identity) 调用 \code{fromY} 来恢复转换器：
 
 \src{snippet02}
-This establishes the bijection between functions of the type
-\code{fromY} and \code{btoa}.
+这就在类型为 \code{fromY} 的函数和 \code{btoa} 之间建立了一个双射。
 
-An alternative way of looking at this isomorphism is that it's a \acronym{CPS}
-encoding of a function from \code{b} to \code{a}. The argument
-\code{a -> x} is a continuation (the handler). The result
-is a function from \code{b} to \code{x} which, when called with a
-value of type \code{b}, will execute the continuation precomposed with
-the function being encoded.
+看待这个同构的另一种方式是，它是从 \code{b} 到 \code{a} 的函数的 \acronym{CPS} 编码。参数 \code{a -> x} 是一个续延 (continuation)（处理器）。结果是一个从 \code{b} 到 \code{x} 的函数，当用 \code{b} 类型的值调用它时，它将执行与被编码函数前复合的续延。
 
-The Yoneda embedding also explains some of the alternative
-representations of data structures in Haskell. In particular, it
-provides a \urlref{https://bartoszmilewski.com/2015/07/13/from-lenses-to-yoneda-embedding/}
-{very useful representation}
-of lenses from the \code{Control.Lens} library.
+Yoneda 嵌入也解释了 Haskell 中数据结构的一些替代表示。特别是，它为 \code{Control.Lens} 库中的透镜 (lenses) 提供了一个 \urlref{https://bartoszmilewski.com/2015/07/13/from-lenses-to-yoneda-embedding/}{非常有用的表示}。
 
-\section{Preorder Example}
+\section{预序例子}
 
-This example was suggested by Robert Harper. It's the application of the
-Yoneda embedding to a category defined by a preorder. A preorder is a
-set with an ordering relation between its elements that's traditionally
-written as $\leqslant$ (less than or equal). The ``pre'' in
-preorder is there because we're only requiring the relation to be
-transitive and reflexive but not necessarily antisymmetric (so it's
-possible to have cycles).
+这个例子是由 Robert Harper 建议的。它是将 Yoneda 嵌入应用于由预序 (preorder) 定义的范畴。预序是一个集合，其元素之间具有通常写为 $\leqslant$（小于或等于）的排序关系。“预” (pre) 在预序中是因为我们只要求关系是传递的 (transitive) 和自反的 (reflexive)，但不一定是反对称的 (antisymmetric)（因此可能存在循环）。
 
-A set with the preorder relation gives rise to a category. The objects
-are the elements of this set. A morphism from object $a$ to
-$b$ either doesn't exist, if the objects cannot be compared or if
-it's not true that $a \leqslant b$; or it exists if
-$a \leqslant b$, and it points from $a$ to
-$b$. There is never more than one morphism from one object to
-another. Therefore any hom-set in such a category is either an empty set
-or a one-element set. Such a category is called \emph{thin}.
+具有预序关系的集合产生一个范畴。对象是该集合的元素。从对象 $a$ 到 $b$ 的态射要么不存在，如果对象无法比较或者 $a \leqslant b$ 不成立；要么存在，如果 $a \leqslant b$，并且它从 $a$ 指向 $b$。从一个对象到另一个对象绝不会有多于一个态射。因此，这样一个范畴中的任何 hom-集要么是空集，要么是单元集 (one-element set)。这样的范畴称为 \emph{瘦范畴 (thin category)}。
 
-It's easy to convince yourself that this construction is indeed a
-category: The arrows are composable because, if
-$a \leqslant b$ and $b \leqslant c$ then
-$a \leqslant c$; and the composition is associative. We also
-have the identity arrows because every element is (less than or) equal
-to itself (reflexivity of the underlying relation).
+很容易说服自己这个构造确实是一个范畴：箭头是可组合的，因为如果 $a \leqslant b$ 且 $b \leqslant c$ 则 $a \leqslant c$；并且组合是结合的。我们也有恒等箭头，因为每个元素都（小于或）等于自身（底层关系的自反性）。
 
-We can now apply the co-Yoneda embedding to a preorder category. In
-particular, we're interested in its action on morphisms:
+我们现在可以将 co-Yoneda 嵌入应用于预序范畴。特别是，我们对其在态射上的作用感兴趣：
 \[[\cat{C}, \Set](\cat{C}(-, a), \cat{C}(-, b)) \cong \cat{C}(a, b)\]
-The hom-set on the right hand side is non-empty if and only if
-$a \leqslant b$ --- in which case it's a one-element set.
-Consequently, if $a \leqslant b$, there exists a single
-natural transformation on the left. Otherwise there is no natural
-transformation.
+右侧的 hom-集非空当且仅当 $a \leqslant b$——在这种情况下它是一个单元集。因此，如果 $a \leqslant b$，则左侧存在唯一的自然变换。否则不存在自然变换。
 
-So what's a natural transformation between hom-functors in a preorder?
-It should be a family of functions between sets $\cat{C}(-, a)$ and
-$\cat{C}(-, b)$. In a preorder, each of these sets can either be empty
-or a singleton. Let's see what kind of functions are there at our
-disposal.
+那么，预序中 hom-函子之间的自然变换是什么？它应该是一族在集合 $\cat{C}(-, a)$ 和 $\cat{C}(-, b)$ 之间的函数。在预序中，这些集合中的每一个要么是空的，要么是单元集。让我们看看我们有哪些函数可用。
 
-There is a function from an empty set to itself (the identity acting on
-an empty set), a function \code{absurd} from an empty set to a
-singleton set (it does nothing, since it only needs to be defined for
-elements of an empty set, of which there are none), and a function from
-a singleton to itself (the identity acting on a one-element set). The
-only combination that is forbidden is the mapping from a singleton to an
-empty set (what would the value of such a function be when acting on the
-single element?).
+有一个从空集到自身的函数（作用于空集的恒等函数），一个函数 \code{absurd} 从空集到单元集（它什么也不做，因为它只需要为没有元素的空集的元素定义），以及一个从单元集到自身的函数（作用于单元集的恒等函数）。唯一被禁止的组合是从单元集到空集的映射（这样一个函数作用于单个元素时的值会是什么？）。
 
-So our natural transformation will never connect a singleton hom-set to
-an empty hom-set. In other words, if $x \leqslant a$
-(singleton hom-set $\cat{C}(x, a)$) then $\cat{C}(x, b)$ cannot be
-empty. A non-empty $\cat{C}(x, b)$ means that $x$ is less or
-equal to $b$. So the existence of the natural transformation in
-question requires that, for every $x$, if
-$x \leqslant a$ then $x \leqslant b$.
-\[\text{for all } x, x \leqslant a \Rightarrow x \leqslant b\]
-On the other hand, co-Yoneda tells us that the existence of this natural
-transformation is equivalent to $\cat{C}(a, b)$ being non-empty, or to
-$a \leqslant b$. Together, we get:
-\[a \leqslant b \text{ if and only if for all } x, x \leqslant a \Rightarrow x \leqslant b\]
-We could have arrived at this result directly. The intuition is that, if
-$a \leqslant b$ then all elements that are below $a$
-must also be below $b$. Conversely, when you substitute
-$a$ for $x$ on the right hand side, it follows that
-$a \leqslant b$. But you must admit that arriving at this
-result through the Yoneda embedding is much more exciting.
+因此，我们的自然变换永远不会将一个单元 hom-集连接到一个空 hom-集。换句话说，如果 $x \leqslant a$（单元 hom-集 $\cat{C}(x, a)$），那么 $\cat{C}(x, b)$ 不能为空。一个非空的 $\cat{C}(x, b)$ 意味着 $x$ 小于或等于 $b$。所以所讨论的自然变换的存在要求对于每个 $x$，如果 $x \leqslant a$ 则 $x \leqslant b$。
+\[\text{对于所有 } x, x \leqslant a \Rightarrow x \leqslant b\]
+另一方面，co-Yoneda 告诉我们这个自然变换的存在等价于 $\cat{C}(a, b)$ 非空，或者说 $a \leqslant b$。合在一起，我们得到：
+\[a \leqslant b \text{ 当且仅当对于所有 } x, x \leqslant a \Rightarrow x \leqslant b\]
+我们本可以直接得到这个结果。直觉是，如果 $a \leqslant b$，那么所有低于 $a$ 的元素也必须低于 $b$。反过来，当你在右侧用 $a$ 替换 $x$ 时，可以推断出 $a \leqslant b$。但你必须承认，通过 Yoneda 嵌入得到这个结果要令人兴奋得多。
 
-\section{Naturality}
+\section{自然性}
 
-The Yoneda lemma establishes the isomorphism between the set of natural
-transformations and an object in $\Set$. Natural transformations
-are morphisms in the functor category $[\cat{C}, \Set]$. The set of
-natural transformation between any two functors is a hom-set in that
-category. The Yoneda lemma is the isomorphism:
+Yoneda 引理建立了自然变换集合与 $\Set$ 中一个对象之间的同构。自然变换是函子范畴 $[\cat{C}, \Set]$ 中的态射。任意两个函子之间的自然变换集合是该范畴中的一个 hom-集。Yoneda 引理是这个同构：
 \[[\cat{C}, \Set](\cat{C}(a, -), F) \cong F a\]
-This isomorphism turns out to be natural in both $F$ and
-$a$. In other words, it's natural in $(F, a)$, a pair
-taken from the product category  $[\cat{C}, \Set] \times \cat{C}$. Notice
-that we are now treating $F$ as an \newterm{object} in the functor
-category.
+这个同构结果在 $F$ 和 $a$ 两方面都是自然的。换句话说，它在 $(F, a)$ 上是自然的，这是从积范畴 (product category) $[\cat{C}, \Set] \times \cat{C}$ 中取出的一个对。注意，我们现在将 $F$ 视为函子范畴中的一个 \newterm{对象 (object)}。
 
-Let's think for a moment what this means. A natural isomorphism is an
-invertible \emph{natural transformation} between two functors. And
-indeed, the right hand side of our isomorphism is a functor. It's a
-functor from $[\cat{C}, \Set] \times \cat{C}$ to $\Set$. Its action on
-a pair $(F, a)$ is a set --- the result of evaluating the
-functor $F$ at the object $a$. This is called the
-evaluation functor.
+让我们思考一下这意味着什么。一个自然同构 (natural isomorphism) 是两个函子之间的一个可逆的 \emph{自然变换}。确实，我们同构的右侧是一个函子。它是一个从 $[\cat{C}, \Set] \times \cat{C}$ 到 $\Set$ 的函子。它作用于一对 $(F, a)$ 的结果是一个集合——即函子 $F$ 在对象 $a$ 上的求值结果。这被称为求值函子 (evaluation functor)。
 
-The left hand side is also a functor that takes $(F, a)$ to a
-set of natural transformations $[\cat{C}, \Set](\cat{C}(a, -), F)$.
+左侧也是一个函子，它将 $(F, a)$ 映射到一个自然变换的集合 $[\cat{C}, \Set](\cat{C}(a, -), F)$。
 
-To show that these are really functors, we should also define their
-action on morphisms. But what's a morphism between a pair
-$(F, a)$ and $(G, b)$? It's a pair of morphisms,
-$(\Phi, f)$; the first being a morphism between functors --- a
-natural transformation --- the second being a regular morphism in
-$\cat{C}$.
+为了表明它们确实是函子，我们还应该定义它们在态射上的作用。但是一对 $(F, a)$ 和 $(G, b)$ 之间的态射是什么？它是一对态射 $(\Phi, f)$；第一个是函子之间的态射——一个自然变换——第二个是 $\cat{C}$ 中的常规态射。
 
-The evaluation functor takes this pair $(\Phi, f)$ and maps it to a
-function between two sets, $F a$ and $G b$. We can
-easily construct such a function from the component of $\Phi$ at
-$a$ (which maps $F a$ to $G a$) and the morphism
-$f$ lifted by $G$:
+求值函子取这个对 $(\Phi, f)$ 并将其映射到两个集合 $F a$ 和 $G b$ 之间的一个函数。我们可以很容易地从 $\Phi$ 在 $a$ 处的分量（它将 $F a$ 映射到 $G a$）和由 $G$ 提升的态射 $f$ 来构造这样一个函数：
 \[(G f) \circ \Phi_a\]
-Notice that, because of naturality of $\Phi$, this is the same as:
+注意，由于 $\Phi$ 的自然性，这与以下相同：
 \[\Phi_b \circ (F f)\]
-I'm not going to prove the naturality of the whole isomorphism --- after
-you've established what the functors are, the proof is pretty
-mechanical. It follows from the fact that our isomorphism is built up
-from functors and natural transformations. There is simply no way for it
-to go wrong.
+我不会去证明整个同构的自然性——在你确定了函子是什么之后，证明过程是相当机械化的。它源于我们的同构是由函子和自然变换构建起来的事实。它根本不可能出错。
 
-\section{Challenges}
+\section{挑战}
 
 \begin{enumerate}
   \tightlist
   \item
-        Express the co-Yoneda embedding in Haskell.
+        在 Haskell 中表达 co-Yoneda 嵌入。
   \item
-        Show that the bijection we established between \code{fromY} and
-        \code{btoa} is an isomorphism (the two mappings are the inverse of
-        each other).
+        证明我们在 \code{fromY} 和 \code{btoa} 之间建立的双射是一个同构（两个映射互为逆运算）。
   \item
-        Work out the Yoneda embedding for a monoid. What functor corresponds
-        to the monoid's single object? What natural transformations correspond
-        to monoid morphisms?
+        推导幺半群的 Yoneda 嵌入。哪个函子对应于幺半群的单个对象？哪些自然变换对应于幺半群态射？
   \item
-        What is the application of the \emph{covariant} Yoneda embedding to
-        preorders? (Question suggested by Gershom Bazerman.)
+        将 \emph{协变} Yoneda 嵌入应用于预序是什么？（Gershom Bazerman 建议的问题。）
   \item
-        Yoneda embedding can be used to embed an arbitrary functor category
-        $[\cat{C}, \cat{D}]$ in the functor category
-        $[[\cat{C}, \cat{D}], \Set]$. Figure out how it works on morphisms
-        (which in this case are natural transformations).
+        Yoneda 嵌入可用于将任意函子范畴 $[\cat{C}, \cat{D}]$ 嵌入到函子范畴 $[[\cat{C}, \cat{D}], \Set]$ 中。弄清楚它如何作用于态射（在这种情况下是自然变换）。
 \end{enumerate}
