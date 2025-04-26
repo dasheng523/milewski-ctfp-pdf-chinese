@@ -1,65 +1,25 @@
 % !TEX root = ../../ctfp-print.tex
 
-\lettrine[lhang=0.17]{I}{ realize that we might} be getting away from programming and diving into
-hard-core math. But you never know what the next big revolution in
-programming might bring and what kind of math might be necessary to
-understand it. There are some very interesting ideas going around, like
-functional reactive programming with its continuous time, the extension
-of Haskell's type system with dependent types, or the exploration on
-homotopy type theory in programming.
+\lettrine[lhang=0.17]{我}{意识到我们可能}正在偏离编程，深入到硬核数学领域。但你永远不知道下一次编程领域的重大革命会带来什么，以及理解它可能需要哪种数学知识。现在有一些非常有趣的想法正在流传，比如具有连续时间 (continuous time) 的函数式反应式编程 (functional reactive programming)，将 Haskell 的类型系统扩展到依赖类型 (dependent types)，或者在编程中探索同伦类型论 (homotopy type theory)。
 
-So far I've been casually identifying types with \emph{sets} of values.
-This is not strictly correct, because such an approach doesn't take into
-account the fact that, in programming, we \emph{compute} values, and the
-computation is a process that takes time and, in extreme cases, might
-not terminate. Divergent computations are part of every Turing-complete
-language.
+到目前为止，我一直随意地将类型 (types) 等同于值的 \emph{集合} (sets)。这并不严格正确，因为这种方法没有考虑到这样一个事实：在编程中，我们是 \emph{计算} (compute) 值的，而计算是一个需要时间的过程，在极端情况下，可能不会终止。发散计算 (Divergent computations) 是每个图灵完备 (Turing-complete) 语言的一部分。
 
-There are also foundational reasons why set theory might not be the best
-fit as the basis for computer science or even math itself. A good
-analogy is that of set theory being the assembly language that is tied
-to a particular architecture. If you want to run your math on different
-architectures, you have to use more general tools.
+还有一些基础性的原因，说明为什么集合论 (set theory) 可能不是计算机科学甚至数学本身的最佳基础。一个很好的类比是，集合论是绑定到特定架构 (architecture) 的汇编语言 (assembly language)。如果你想在不同的架构上运行你的数学，你必须使用更通用的工具。
 
-One possibility is to use spaces in place of sets. Spaces come with more
-structure, and may be defined without recourse to sets. One thing
-usually associated with spaces is topology, which is necessary to define
-things like continuity. And the conventional approach to topology is,
-you guessed it, through set theory. In particular, the notion of a
-subset is central to topology. Not surprisingly, category theorists
-generalized this idea to categories other than $\Set$. The type of
-category that has just the right properties to serve as a replacement
-for set theory is called a \newterm{topos} (plural: topoi), and it
-provides, among other things, a generalized notion of a subset.
+一种可能性是用空间 (spaces) 代替集合。空间带有更多结构，并且可以在不借助集合的情况下定义。通常与空间相关的一件事是拓扑 (topology)，这对于定义连续性 (continuity) 之类的事物是必需的。而处理拓扑的传统方法，你猜对了，是通过集合论。特别是，子集 (subset) 的概念对于拓扑至关重要。毫不奇怪，范畴论者将这个想法推广到了 $\Set$ 以外的范畴。具有恰好合适的属性以替代集合论的范畴类型称为 \newterm{topos}（复数：topoi），除其他外，它提供了一个广义的子集概念。
 
-\section{Subobject Classifier}
+\section{子对象分类子}
 
-Let's start by trying to express the idea of a subset using functions
-rather than elements. Any function $f$ from some set $a$
-to $b$ defines a subset of $b$--that of the image of
-$a$ under $f$. But there are many functions that define
-the same subset. We need to be more specific. To begin with, we might
-focus on functions that are injective --- ones that don't smush multiple
-elements into one. Injective functions ``inject'' one set into another.
-For finite sets, you may visualize injective functions as parallel
-arrows connecting elements of one set to elements of another. Of course,
-the first set cannot be larger than the second set, or the arrows would
-necessarily converge. There is still some ambiguity left: there may be
-another set $a'$ and another injective function
-$f'$ from that set to $b$ that picks the same
-subset. But you can easily convince yourself that such a set would have
-to be isomorphic to $a$. We can use this fact to define a subset
-as a family of injective functions that are related by isomorphisms of
-their domains. More precisely, we say that two injective functions:
+让我们尝试用函数 (functions) 而不是元素来表达子集的概念。从某个集合 $a$ 到 $b$ 的任何函数 $f$ 都定义了 $b$ 的一个子集——即 $a$ 在 $f$ 下的像 (image)。但是有很多函数定义的是同一个子集。我们需要更具体一些。首先，我们可以关注单射的 (injective) 函数——那些不会将多个元素压缩成一个的函数。单射函数将一个集合“注入”到另一个集合中。对于有限集合，你可以将单射函数可视化为连接一个集合的元素到另一个集合元素的平行箭头。当然，第一个集合不能大于第二个集合，否则箭头必然会汇聚。仍然存在一些模糊性：可能存在另一个集合 $a'$ 和另一个从该集合到 $b$ 的单射函数 $f'$，它们选取了相同的子集。但你很容易可以说服自己，这样的集合必须与 $a$ 同构 (isomorphic)。我们可以利用这个事实将子集定义为一个通过其定义域的同构 (isomorphisms) 相关联的单射函数族。更准确地说，我们说两个单射函数：
 \begin{align*}
   f  & \Colon a \to b  \\
   f' & \Colon a' \to b
 \end{align*}
-are equivalent if there is an isomorphism:
+是等价的，如果存在一个同构：
 \[h \Colon a \to a'\]
-such that:
+使得：
 \[f = f'\ .\ h\]
-Such a family of equivalent injections defines a subset of $b$.
+这样一个等价单射族定义了 $b$ 的一个子集。
 
 \begin{figure}[H]
   \centering
@@ -67,17 +27,14 @@ Such a family of equivalent injections defines a subset of $b$.
 \end{figure}
 
 \noindent
-This definition can be lifted to an arbitrary category if we replace
-injective functions with monomorphism. Just to remind you, a
-monomorphism $m$ from $a$ to $b$ is defined by its
-universal property. For any object $c$ and any pair of morphisms:
+如果我们将单射函数替换为单态射 (monomorphism)，这个定义可以提升到任意范畴。提醒一下，从 $a$ 到 $b$ 的单态射 $m$ 是通过其泛性质 (universal property) 定义的。对于任何对象 $c$ 和任何一对态射：
 \begin{align*}
   g  & \Colon c \to a \\
   g' & \Colon c \to a
 \end{align*}
-such that:
+使得：
 \[m\ .\ g = m\ .\ g'\]
-it must be that $g = g'$.
+必然有 $g = g'$。
 
 \begin{figure}[H]
   \centering
@@ -85,12 +42,7 @@ it must be that $g = g'$.
 \end{figure}
 
 \noindent
-On sets, this definition is easier to understand if we consider what it
-would mean for a function $m$ \emph{not} to be a monomorphism. It
-would map two different elements of $a$ to a single element of
-$b$. We could then find two functions $g$ and
-$g'$ that differ only at those two elements. The
-postcomposition with $m$ would then mask this difference.
+在集合上，如果我们考虑函数 $m$ \emph{不是} 单态射意味着什么，这个定义更容易理解。它会将 $a$ 的两个不同元素映射到 $b$ 的单个元素。然后我们可以找到两个函数 $g$ 和 $g'$，它们仅在那两个元素上不同。与 $m$ 的后复合 (postcomposition) 就会掩盖这种差异。
 
 \begin{figure}[H]
   \centering
@@ -98,17 +50,9 @@ postcomposition with $m$ would then mask this difference.
 \end{figure}
 
 \noindent
-There is another way of defining a subset: using a single function
-called the characteristic function. It's a function $\chi$ from the
-set $b$ to a two-element set $\Omega$. One element of this set
-is designated as ``true'' and the other as ``false.'' This function
-assigns ``true'' to those elements of $b$ that are members of the
-subset, and ``false'' to those that aren't.
+还有另一种定义子集的方法：使用一个称为特征函数 (characteristic function) 的单一函数。它是从集合 $b$ 到一个二元集合 $\Omega$ 的函数 $\chi$。这个集合的一个元素被指定为“真 (true)”，另一个为“假 (false)”。这个函数将 $b$ 中属于该子集的元素赋为“真”，将不属于的元素赋为“假”。
 
-It remains to specify what it means to designate an element of
-$\Omega$ as ``true.'' We can use the standard trick: use a function
-from a singleton set to $\Omega$. We'll call this function
-$\mathit{true}$:
+还需要具体说明将 $\Omega$ 的一个元素指定为“真”意味着什么。我们可以使用标准的技巧：使用从单例集到 $\Omega$ 的函数。我们将这个函数称为 $\mathit{true}$：
 \[\mathit{true} \Colon 1 \to \Omega\]
 
 \begin{figure}[H]
@@ -117,23 +61,9 @@ $\mathit{true}$:
 \end{figure}
 
 \noindent
-These definitions can be combined in such a way that they not only
-define what a subobject is, but also define the special object
-$\Omega$ without talking about elements. The idea is that we want the
-morphism $\mathit{true}$ to represent a ``generic'' subobject. In
-$\Set$, it picks a single-element subset from a two-element set
-$\Omega$. This is as generic as it gets. It's clearly a proper subset,
-because $\Omega$ has one more element that's \emph{not} in that
-subset.
+这些定义可以这样结合起来，它们不仅定义了什么是子对象 (subobject)，而且还定义了特殊的分类对象 (classifying object) $\Omega$，而无需谈论元素。其思想是，我们希望态射 $\mathit{true}$ 代表一个“泛型 (generic)”子对象。在 $\Set$ 中，它从二元集合 $\Omega$ 中选取一个单元素子集。这已经是最泛型的了。它显然是一个真子集，因为 $\Omega$ 还有一个元素 \emph{不} 在那个子集中。
 
-In a more general setting, we define $\mathit{true}$ to be a monomorphism
-from the terminal object to the \emph{classifying object} $\Omega$.
-But we have to define the classifying object. We need a universal
-property that links this object to the characteristic function. It turns
-out that, in $\Set$, the pullback of $\mathit{true}$ along the
-characteristic function $\chi$ defines both the subset $a$
-and the injective function that embeds it in $b$. Here's the
-pullback diagram:
+在更一般的设置中，我们将 $\mathit{true}$ 定义为从终对象 (terminal object) 到 \emph{分类对象} $\Omega$ 的单态射。但我们必须定义分类对象。我们需要一个泛性质，将这个对象与特征函数联系起来。事实证明，在 $\Set$ 中，$\mathit{true}$ 沿着特征函数 $\chi$ 的拉回 (pullback) 同时定义了子集 $a$ 和将其嵌入 $b$ 的单射函数。以下是拉回图：
 
 \begin{figure}[H]
   \centering
@@ -141,118 +71,52 @@ pullback diagram:
 \end{figure}
 
 \noindent
-Let's analyze this diagram. The pullback equation is:
+让我们分析这个图。拉回方程是：
 \[\mathit{true}\ .\ \mathit{unit} = \chi\ .\ f\]
-The function $\mathit{true}\ .\ \mathit{unit}$ maps every element of $a$ to
-``true.'' Therefore $f$ must map all elements of $a$ to
-those elements of $b$ for which $\chi$ is ``true.'' These
-are, by definition, the elements of the subset that is specified by the
-characteristic function $\chi$. So the image of $f$ is indeed
-the subset in question. The universality of the pullback guarantees that
-$f$ is injective.
+函数 $\mathit{true}\ .\ \mathit{unit}$ 将 $a$ 的每个元素映射到“真”。因此 $f$ 必须将 $a$ 的所有元素映射到 $b$ 中 $\chi$ 为“真”的那些元素。根据定义，这些正是由特征函数 $\chi$ 指定的子集的元素。所以 $f$ 的像确实是所讨论的子集。拉回的泛性保证了 $f$ 是单射的。
 
-This pullback diagram can be used to define the classifying object in
-categories other than $\Set$. Such a category must have a terminal
-object, which will let us define the monomorphism $\mathit{true}$. It must
-also have pullbacks --- the actual requirement is that it must have all
-finite limits (a pullback is an example of a finite limit). Under those
-assumptions, we define the classifying object $\Omega$ by the property
-that, for every monomorphism $f$ there is a unique morphism
-$\chi$ that completes the pullback diagram.
+这个拉回图可以用来在 $\Set$ 以外的范畴中定义分类对象。这样的范畴必须有一个终对象，这将使我们能够定义单态射 $\mathit{true}$。它还必须有拉回——实际的要求是它必须有所有有限极限 (finite limits)（拉回是有限极限的一个例子）。在这些假设下，我们通过以下属性定义分类对象 $\Omega$：对于每个单态射 $f$，存在唯一的态射 $\chi$ 使得拉回图完整。
 
-Let's analyze the last statement. When we construct a pullback, we are
-given three objects $\Omega$, $b$ and $1$; and two
-morphisms, $\mathit{true}$ and $\chi$. The existence of a pullback
-means that we can find the best such object $a$, equipped with
-two morphisms $f$ and $\mathit{unit}$ (the latter is uniquely
-determined by the definition of the terminal object), that make the
-diagram commute.
+让我们分析最后这句话。当我们构造拉回时，我们给定三个对象 $\Omega$、$b$ 和 $1$；以及两个态射，$\mathit{true}$ 和 $\chi$。拉回的存在意味着我们可以找到最好的这样一个对象 $a$，配备两个态射 $f$ 和 $\mathit{unit}$（后者由终对象的定义唯一确定），使得图交换。
 
-Here we are solving a different system of equations. We are solving for
-$\Omega$ and $\mathit{true}$ while varying both $a$ \emph{and}
-$b$. For a given $a$ and $b$ there may or may not
-be a monomorphism $f \Colon a \to b$. But if there is one, we
-want it to be a pullback of some $\chi$. Moreover, we want this
-$\chi$ to be uniquely determined by $f$.
+这里我们正在求解一个不同的方程组。我们正在求解 $\Omega$ 和 $\mathit{true}$，同时改变 $a$ \emph{和} $b$。对于给定的 $a$ 和 $b$，可能存在也可能不存在单态射 $f \Colon a \to b$。但如果存在一个，我们希望它是某个 $\chi$ 的拉回。此外，我们希望这个 $\chi$ 由 $f$ 唯一确定。
 
-We can't say that there is a one-to-one correspondence between
-monomorphisms $f$ and characteristic functions $\chi$,
-because a pullback is only unique up to isomorphism. But remember our
-earlier definition of a subset as a family of equivalent injections. We
-can generalize it by defining a subobject of $b$ as a family of
-equivalent monomorphisms to $b$. This family of monomorphisms is
-in one-to-one correspondence with the family of equivalent pullbacks of
-our diagram.
+我们不能说单态射 $f$ 和特征函数 $\chi$ 之间存在一一对应关系，因为拉回只在同构意义下是唯一的。但请记住我们之前将子集定义为等价单射族。我们可以通过将 $b$ 的子对象定义为到 $b$ 的等价单态射族来推广它。这个单态射族与我们图的等价拉回族是一一对应的。
 
-We can thus define a set of subobjects of $b$, $\mathit{Sub}(b)$,
-as a family of monomorphisms, and see that it is isomorphic to the set
-of morphisms from $b$ to $\Omega$:
+因此，我们可以将 $b$ 的子对象集合 $\mathit{Sub}(b)$ 定义为一个单态射族，并看到它同构于从 $b$ 到 $\Omega$ 的态射集合：
 \[\mathit{Sub}(b) \cong \cat{C}(b, \Omega)\]
-This happens to be a natural isomorphism of two functors. In other
-words, $\mathit{Sub}(-)$ is a representable (contravariant) functor whose
-representation is the object $\Omega$.
+这恰好是两个函子的自然同构。换句话说，$\mathit{Sub}(-)$ 是一个可表示的 (representable)（逆变）函子，其表示 (representation) 是对象 $\Omega$。
 
 \section{Topos}
 
-A topos is a category that:
+Topos 是一个范畴，它：
 
 \begin{enumerate}
   \tightlist
   \item
-        Is Cartesian closed: It has all products, the terminal object, and
-        exponentials (defined as right adjoints to products),
+        是笛卡尔闭 (Cartesian closed) 的：它具有所有积 (products)、终对象和指数对象 (exponentials)（定义为积的右伴随），
   \item
-        Has limits for all finite diagrams,
+        对所有有限图示具有极限，
   \item
-        Has a subobject classifier $\Omega$.
+        具有子对象分类子 (subobject classifier) $\Omega$。
 \end{enumerate}
 
-This set of properties makes a topos a shoe-in for $\Set$ in most
-applications. It also has additional properties that follow from its
-definition. For instance, a topos has all finite colimits, including the
-initial object.
+这一组属性使得 topos 在大多数应用中都能很好地替代 $\Set$。它还具有从其定义中得出的其他属性。例如，topos 具有所有有限余极限 (finite colimits)，包括初始对象 (initial object)。
 
-It would be tempting to define the subobject classifier as a coproduct
-(sum) of two copies of the terminal object --that's what it is in
-$\Set$--- but we want to be more general than that. Topoi in which
-this is true are called Boolean.
+将子对象分类子定义为两个终对象副本的余积 (coproduct)（和）—— 这在 $\Set$ 中就是如此 —— 会很有诱惑力，但我们希望更通用。满足此条件的 Topoi 被称为布尔的 (Boolean)。
 
-\section{Topoi and Logic}
+\section{Topoi 与逻辑}
 
-In set theory, a characteristic function may be interpreted as defining
-a property of the elements of a set --- a \newterm{predicate} that is true
-for some elements and false for others. The predicate $\mathit{isEven}$
-selects a subset of even numbers from the set of natural numbers. In a
-topos, we can generalize the idea of a predicate to be a morphism from
-object $a$ to $\Omega$. This is why $\Omega$ is sometimes
-called the truth object.
+在集合论中，特征函数可以解释为定义集合元素的属性——一个对某些元素为真而对其他元素为假的 \newterm{谓词} (predicate)。谓词 $\mathit{isEven}$ 从自然数集合中选出偶数子集。在 topos 中，我们可以将谓词的概念推广为从对象 $a$ 到 $\Omega$ 的态射。这就是为什么 $\Omega$ 有时被称为真值对象 (truth object)。
 
-Predicates are the building blocks of logic. A topos contains all the
-necessary instrumentation to study logic. It has products that
-correspond to logical conjunctions (logical \emph{and}), coproducts for
-disjunctions (logical \emph{or}), and exponentials for implications. All
-standard axioms of logic hold in a topos except for the law of excluded
-middle (or, equivalently, double negation elimination). That's why the
-logic of a topos corresponds to constructive or intuitionistic logic.
+谓词是逻辑 (logic) 的构建模块。Topos 包含了研究逻辑所需的所有必要工具。它有对应于逻辑合取 (logical conjunctions)（逻辑 \emph{与}）的积，对应于逻辑析取 (disjunctions)（逻辑 \emph{或}）的余积，以及对应于蕴含 (implications) 的指数对象。逻辑的所有标准公理在 topos 中都成立，除了排中律 (law of excluded middle)（或等价地，双重否定除去 (double negation elimination)）。这就是为什么 topos 的逻辑对应于构造逻辑 (constructive logic) 或直觉主义逻辑 (intuitionistic logic)。
 
-Intuitionistic logic has been steadily gaining ground, finding
-unexpected support from computer science. The classical notion of
-excluded middle is based on the belief that there is absolute truth: Any
-statement is either true or false or, as Ancient Romans would say,
-\emph{tertium non datur} (there is no third option). But the only way we
-can know whether something is true or false is if we can prove or
-disprove it. A proof is a process, a computation --- and we know that
-computations take time and resources. In some cases, they may never
-terminate. It doesn't make sense to claim that a statement is true if we
-cannot prove it in finite amount of time. A topos with its more nuanced
-truth object provides a more general framework for modeling interesting
-logics.
+直觉主义逻辑一直在稳步发展，并从计算机科学中获得了意想不到的支持。经典的排中律概念基于这样一种信念：存在绝对真理：任何陈述要么为真，要么为假，或者如古罗马人所说，\emph{tertium non datur}（没有第三种选择）。但是我们能够知道某事是真是假的唯一方法是我们能够证明 (prove) 或证伪 (disprove) 它。证明是一个过程，一个计算 (computation)——而我们知道计算需要时间和资源。在某些情况下，它们可能永远不会终止。如果我们在有限时间内无法证明一个陈述，那么声称它是真的就没有意义。Topos 及其更细致的真值对象提供了一个更通用的框架来建模有趣的逻辑。
 
-\section{Challenges}
+\section{挑战}
 
 \begin{enumerate}
   \tightlist
   \item
-        Show that the function $f$ that is the pullback of
-        $\mathit{true}$ along the characteristic function must be injective.
+        证明作为 $\mathit{true}$ 沿着特征函数拉回的函数 $f$ 必须是单射的。
 \end{enumerate}

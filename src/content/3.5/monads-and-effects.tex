@@ -1,496 +1,244 @@
 % !TEX root = ../../ctfp-print.tex
 
-\lettrine[lhang=0.17]{N}{ow that we know} what the monad is for --- it lets us compose
-embellished functions --- the really interesting question is why
-embellished functions are so important in functional programming. We've
-already seen one example, the \code{Writer} monad, where embellishment
-let us create and accumulate a log across multiple function calls. A
-problem that would otherwise be solved using impure functions (e.g., by
-accessing and modifying some global state) was solved with pure
-functions.
+\lettrine[lhang=0.17]{既}{然我们知道了} monad (单子) 是做什么用的 —— 它让我们能够组合 embellished functions (修饰函数) —— 那么真正有趣的问题是，为什么修饰函数在 functional programming (函数式编程) 中如此重要。我们已经看到了一个例子，即 \code{Writer} monad (Writer 单子)，其中的修饰使我们能够跨多个函数调用创建和累积日志。一个通常需要使用 impure functions (非纯函数) (例如，通过访问和修改某个全局 state (状态)) 来解决的问题，现在用 pure functions (纯函数) 解决了。
 
-\section{The Problem}
+\section{问题}
 
-Here is a short list of similar problems, copied from
-\urlref{https://core.ac.uk/download/pdf/21173011.pdf}{Eugenio Moggi's
-  seminal paper}, all of which are traditionally solved by abandoning the
-purity of functions.
+以下是一个类似问题的简短列表，摘自 \urlref{https://core.ac.uk/download/pdf/21173011.pdf}{Eugenio Moggi 的开创性论文}，所有这些问题传统上都是通过放弃函数的纯粹性来解决的。
 
 \begin{itemize}
   \tightlist
   \item
-        Partiality: Computations that may not terminate
+        Partiality (部分性)：可能无法终止的计算
   \item
-        Nondeterminism: Computations that may return many results
+        Nondeterminism (非确定性)：可能返回多个结果的计算
   \item
-        Side effects: Computations that access/modify state
+        Side effects (副作用)：访问/修改状态的计算
 
         \begin{itemize}
           \tightlist
           \item
-                Read-only state, or the environment
+                只读状态，或环境
           \item
-                Write-only state, or a log
+                只写状态，或日志
           \item
-                Read/write state
+                读/写状态
         \end{itemize}
   \item
-        Exceptions: Partial functions that may fail
+        Exceptions (异常)：可能失败的部分函数
   \item
-        Continuations: Ability to save state of the program and then restore
-        it on demand
+        Continuations (续延)：能够保存程序状态并在需要时恢复它的能力
   \item
-        Interactive Input
+        交互式输入
   \item
-        Interactive Output
+        交互式输出
 \end{itemize}
 
-What really is mind blowing is that all these problems may be solved
-using the same clever trick: turning to embellished functions. Of
-course, the embellishment will be totally different in each case.
+真正令人震撼的是，所有这些问题都可以使用同一个巧妙的技巧来解决：转向修饰函数。当然，每种情况下的修饰将完全不同。
 
-You have to realize that, at this stage, there is no requirement that
-the embellishment be monadic. It's only when we insist on composition
---- being able to decompose a single embellished function into smaller
-embellished functions --- that we need a monad. Again, since each of the
-embellishments is different, monadic composition will be implemented
-differently, but the overall pattern is the same. It's a very simple
-pattern: composition that is associative and equipped with identity.
+你必须意识到，在这个阶段，并没有要求修饰必须是 monadic (单子的)。只有当我们坚持 composition (组合) —— 即能够将一个大的修饰函数分解为更小的修饰函数时 —— 我们才需要 monad。再次强调，由于每种修饰都不同，单子组合的实现方式也会不同，但整体模式是相同的。这是一个非常简单的模式：满足结合律并配备单位元的组合。
 
-The next section is heavy on Haskell examples. Feel free to skim or even
-skip it if you're eager to get back to category theory or if you're
-already familiar with Haskell's implementation of monads.
+下一节包含大量 Haskell 示例。如果你渴望回到 category theory (范畴论) 或者已经熟悉 Haskell 的 monad 实现，可以随意略读甚至跳过本节。
 
-\section{The Solution}
+\section{解决方案}
 
-First, let's analyze the way we used the \code{Writer} monad. We
-started with a pure function that performed a certain task --- given
-arguments, it produced a certain output. We replaced this function with
-another function that embellished the original output by pairing it with
-a string. That was our solution to the logging problem.
+首先，让我们分析一下我们使用 \code{Writer} monad 的方式。我们从一个执行特定任务的纯函数开始——给定参数，它产生特定的输出。我们将此函数替换为另一个函数，该函数通过将原始输出与一个字符串配对来修饰它。这就是我们对日志问题的解决方案。
 
-We couldn't stop there because, in general, we don't want to deal with
-monolithic solutions. We needed to be able to decompose one
-log-producing function into smaller log-producing functions. It's the
-composition of those smaller functions that led us to the concept of a
-monad.
+我们不能止步于此，因为通常我们不希望处理单一庞大的解决方案。我们需要能够将一个生成日志的函数分解为更小的生成日志的函数。正是这些较小函数的组合引导我们走向了 monad 的概念。
 
-What's really amazing is that the same pattern of embellishing the
-function return types works for a large variety of problems that
-normally would require abandoning purity. Let's go through our list and
-identify the embellishment that applies to each problem in turn.
+真正令人惊奇的是，这种修饰函数返回类型的相同模式适用于各种各样通常需要放弃纯粹性的问题。让我们逐一 بررسی 我们的列表，并确定适用于每个问题的修饰。
 
-\subsection{Partiality}
+\subsection{部分性}
 
-We modify the return type of every function that may not terminate by
-turning it into a ``lifted'' type --- a type that contains all values of
-the original type plus the special ``bottom'' value $\bot$. For
-instance, the \code{Bool} type, as a set, would contain two elements:
-\code{True} and \code{False}. The lifted \code{Bool} contains
-three elements. Functions that return the lifted \code{Bool} may
-produce \code{True} or \code{False}, or execute forever.
+我们修改每个可能不会终止的函数的返回类型，将其变成一个 "lifted" type (提升类型) —— 一种包含原始类型所有值外加特殊 "bottom" value (底值) $\bot$ 的类型。例如，\code{Bool} 类型，作为一个集合，包含两个元素：\code{True} 和 \code{False}。提升后的 \code{Bool} 包含三个元素。返回提升后 \code{Bool} 的函数可能产生 \code{True} 或 \code{False}，或者永远执行下去。
 
-The funny thing is that, in a lazy language like Haskell, a never-ending
-function may actually return a value, and this value may be passed to
-the next function. We call this special value the bottom. As long as
-this value is not explicitly needed (for instance, to be pattern
-matched, or produced as output), it may be passed around without
-stalling the execution of the program. Because every Haskell function
-may be potentially non-terminating, all types in Haskell are assumed to
-be lifted. This is why we often talk about the category $\Hask$ of
-Haskell (lifted) types and functions rather than the simpler
-$\Set$. It is not clear, though, that $\Hask$ is a real
-category (see this
-\urlref{http://math.andrej.com/2016/08/06/hask-is-not-a-category/}{Andrej
-  Bauer post}).
+有趣的是，在像 Haskell 这样的 lazy language (惰性语言) 中，一个永不终止的函数实际上可能返回一个值，并且这个值可以传递给下一个函数。我们称这个特殊值为底值。只要这个值没有被显式需要（例如，用于模式匹配或作为输出产生），它就可以在不阻塞程序执行的情况下被传递。因为每个 Haskell 函数都可能是潜在非终止的，所以 Haskell 中的所有类型都被假定为提升类型。这就是为什么我们经常讨论 Haskell (提升) 类型和函数的 category (范畴) $\Hask$，而不是更简单的 $\Set$。不过，$\Hask$ 是否是一个真正的范畴尚不清楚（参见这篇 \urlref{http://math.andrej.com/2016/08/06/hask-is-not-a-category/}{Andrej Bauer 的帖子}）。
 
-\subsection{Nondeterminism}
+\subsection{非确定性}
 
-If a function can return many different results, it may as well return
-them all at once. Semantically, a non-deterministic function is
-equivalent to a function that returns a list of results. This makes a
-lot of sense in a lazy garbage-collected language. For instance, if all
-you need is one value, you can just take the head of the list, and the
-tail will never be evaluated. If you need a random value, use a random
-number generator to pick the n-th element of the list. Laziness even
-allows you to return an infinite list of results.
+如果一个函数可以返回许多不同的结果，它不妨一次性将它们全部返回。从语义上讲，一个非确定性函数等价于一个返回结果列表的函数。这在惰性的、具有垃圾回收的语言中非常有意义。例如，如果你只需要一个值，你可以只取列表的头部，而尾部永远不会被求值。如果你需要一个随机值，使用随机数生成器来选择列表的第 n 个元素。惰性甚至允许你返回一个无限的结果列表。
 
-In the list monad --- Haskell's implementation of nondeterministic
-computations --- \code{join} is implemented as \code{concat}.
-Remember that \code{join} is supposed to flatten a container of
-containers --- \code{concat} concatenates a list of lists into a
-single list. \code{return} creates a singleton list:
+在 list monad (列表单子) 中 —— Haskell 对非确定性计算的实现 —— \code{join} 被实现为 \code{concat}。记住，\code{join} 应该将容器的容器扁平化 —— \code{concat} 将一个列表的列表连接成一个单一的列表。\code{return} 创建一个单元素列表：
 
 \src{snippet01}
-The bind operator for the list monad is given by the general formula:
-\code{fmap} followed by \code{join} which, in this case gives:
+列表单子的 bind operator (绑定运算符) 由通用公式给出：先 \code{fmap} 然后 \code{join}，在这种情况下得到：
 
 \src{snippet02}
-Here, the function \code{k}, which itself produces a list, is applied
-to every element of the list \code{as}. The result is a list of lists,
-which is flattened using \code{concat}.
+这里，函数 \code{k} (它本身产生一个列表) 被应用于列表 \code{as} 的每个元素。结果是一个列表的列表，然后使用 \code{concat} 将其扁平化。
 
-From the programmer's point of view, working with a list is easier than,
-for instance, calling a non-deterministic function in a loop, or
-implementing a function that returns an iterator (although,
-\urlref{http://ericniebler.com/2014/04/27/range-comprehensions/}{in modern
-  C++}, returning a lazy range would be almost equivalent to returning a
-list in Haskell).
+从程序员的角度来看，处理列表比（例如）在循环中调用非确定性函数，或者实现一个返回迭代器的函数要容易（尽管，\urlref{http://ericniebler.com/2014/04/27/range-comprehensions/}{在现代 C++ 中}，返回一个惰性范围几乎等同于在 Haskell 中返回一个列表）。
 
-A good example of using non-determinism creatively is in game
-programming. For instance, when a computer plays chess against a human,
-it can't predict the opponent's next move. It can, however, generate a
-list of all possible moves and analyze them one by one. Similarly, a
-non-deterministic parser may generate a list of all possible parses for
-a given expression.
+创造性地使用非确定性的一个好例子是在游戏编程中。例如，当计算机与人下棋时，它无法预测对手的下一步。然而，它可以生成所有可能走法的列表，并逐一分析它们。类似地，一个非确定性 parser (解析器) 可以为一个给定的表达式生成所有可能的解析结果列表。
 
-Even though we may interpret functions returning lists as
-non-deterministic, the applications of the list monad are much wider.
-That's because stitching together computations that produce lists is a
-perfect functional substitute for iterative constructs --- loops ---
-that are used in imperative programming. A single loop can be often
-rewritten using \code{fmap} that applies the body of the loop to each
-element of the list. The \code{do} notation in the list monad can be
-used to replace complex nested loops.
+尽管我们可以将返回列表的函数解释为非确定性的，但列表单子的应用范围要广泛得多。这是因为将产生列表的计算拼接在一起，是命令式编程中使用的迭代结构（循环）的一个完美的函数式替代品。单个循环通常可以用 \code{fmap} 重写，将循环体应用于列表的每个元素。列表单子中的 \code{do} 标记可以用来替代复杂的嵌套循环。
 
-My favorite example is the program that generates Pythagorean triples
---- triples of positive integers that can form sides of right triangles.
+我最喜欢的例子是生成 Pythagorean triples (毕达哥拉斯三元组) 的程序 —— 即可以构成直角三角形三条边的正整数三元组。
 
 \src{snippet03}
-The first line tells us that \code{z} gets an element from an infinite
-list of positive numbers \code{{[}1..{]}}. Then \code{x} gets an
-element from the (finite) list \code{{[}1..z{]}} of numbers between 1
-and \code{z}. Finally \code{y} gets an element from the list of
-numbers between \code{x} and \code{z}. We have three numbers
-$1 \leqslant x \leqslant y \leqslant z$ at our
-disposal. The function \code{guard} takes a \code{Bool} expression
-and returns a list of units:
+第一行告诉我们 \code{z} 从正整数的无限列表 \code{{[}1..{]}} 中获取一个元素。然后 \code{x} 从 1 到 \code{z} 之间的（有限）列表 \code{{[}1..z{]}} 中获取一个元素。最后 \code{y} 从 \code{x} 到 \code{z} 之间的列表中获取一个元素。我们手头有三个数 $1 \leqslant x \leqslant y \leqslant z$。函数 \code{guard} 接受一个 \code{Bool} 表达式，并返回一个单元 (unit) 列表：
 
 \src{snippet04}
-This function (which is a member of a larger class called
-\code{MonadPlus}) is used here to filter out non-Pythagorean triples.
-Indeed, if you look at the implementation of bind (or the related
-operator \code{>>}), you'll notice that,
-when given an empty list, it produces an empty list. On the other hand,
-when given a non-empty list (here, the singleton list containing unit
-\code{{[}(){]}}), bind will call the continuation, here
-\code{return (x, y, z)}, which produces a singleton list with a
-verified Pythagorean triple. All those singleton lists will be
-concatenated by the enclosing binds to produce the final (infinite)
-result. Of course, the caller of \code{triples} will never be able to
-consume the whole list, but that doesn't matter, because Haskell is
-lazy.
+这个函数（它是一个更大的称为 \code{MonadPlus} 的类 的成员）在这里用于过滤掉非毕达哥拉斯三元组。事实上，如果你查看 bind（或相关运算符 \code{>>}）的实现，你会注意到，当给定一个空列表时，它会产生一个空列表。另一方面，当给定一个非空列表（这里是包含单元 \code{{[}(){]}} 的单元素列表）时，bind 将调用 continuation (续延) ，这里是 \code{return (x, y, z)}，它产生一个包含已验证的毕达哥拉斯三元组的单元素列表。所有这些单元素列表将被外层的 bind 连接起来，产生最终的（无限）结果。当然，\code{triples} 的调用者永远无法消费整个列表，但这没关系，因为 Haskell 是惰性的。
 
-The problem that normally would require a set of three nested loops has
-been dramatically simplified with the help of the list monad and the
-\code{do} notation. As if that weren't enough, Haskell let's you
-simplify this code even further using list comprehension:
+这个通常需要一组三个嵌套循环的问题，在列表单子和 \code{do} 标记的帮助下得到了极大的简化。似乎这还不够，Haskell 允许你使用 list comprehension (列表推导式) 进一步简化此代码：
 
 \src{snippet05}
-This is just further syntactic sugar for the list monad (strictly
-speaking, \code{MonadPlus}).
+这只是列表单子（严格来说是 \code{MonadPlus}）的进一步 syntactic sugar (语法糖)。
 
-You might see similar constructs in other functional or imperative
-languages under the guise of generators and coroutines.
+你可能会在其他函数式或命令式语言中看到类似以 generators (生成器) 和 coroutines (协程) 为幌子的结构。
 
-\subsection{Read-Only State}
+\subsection{只读状态}
 
-A function that has read-only access to some external state, or
-environment, can be always replaced by a function that takes that
-environment as an additional argument. A pure function
-\code{(a, e) -> b} (where \code{e} is the type of
-the environment) doesn't look, at first sight, like a Kleisli arrow. But
-as soon as we curry it to
-\code{a -> (e -> b)} we recognize the
-embellishment as our old friend the reader functor:
+一个对某些外部状态或环境具有只读访问权限的函数，总是可以被一个将该环境作为额外参数的函数所替代。一个纯函数 \code{(a, e) -> b}（其中 \code{e} 是环境的类型）乍一看并不像 Kleisli arrow (Kleisli 箭头)。但是一旦我们将其柯里化 (curry) 为 \code{a -> (e -> b)}，我们就能认出这个修饰就是我们的老朋友 reader functor (Reader 函子)：
 
 \src{snippet06}
-You may interpret a function returning a \code{Reader} as producing a
-mini-executable: an action that given an environment produces the
-desired result. There is a helper function \code{runReader} to execute
-such an action:
+你可以将一个返回 \code{Reader} 的函数解释为产生一个微型可执行文件：一个给定环境就能产生所需结果的 action (动作)。有一个辅助函数 \code{runReader} 来执行这样的动作：
 
 \src{snippet07}
-It may produce different results for different values of the
-environment.
+对于不同的环境值，它可能会产生不同的结果。
 
-Notice that both the function returning a \code{Reader}, and the
-\code{Reader} action itself are pure.
+注意，返回 \code{Reader} 的函数和 \code{Reader} 动作本身都是纯的。
 
-To implement bind for the \code{Reader} monad, first notice that you
-have to produce a function that takes the environment \code{e} and
-produces a \code{b}:
+为了实现 \code{Reader} monad (Reader 单子) 的 bind，首先注意你需要生成一个接受环境 \code{e} 并产生一个 \code{b} 的函数：
 
 \src{snippet08}
-Inside the lambda, we can execute the action \code{ra} to produce an
-\code{a}:
+在 lambda 表达式内部，我们可以执行动作 \code{ra} 来产生一个 \code{a}：
 
 \src{snippet09}
-We can then pass the \code{a} to the continuation \code{k} to get a
-new action \code{rb}:
+然后我们可以将 \code{a} 传递给续延 \code{k} 以获得一个新的动作 \code{rb}：
 
 \src{snippet10}
-Finally, we can run the action \code{rb} with the environment
-\code{e}:
+最后，我们可以用环境 \code{e} 来运行动作 \code{rb}：
 
 \src{snippet11}
-To implement \code{return} we create an action that ignores the
-environment and returns the unchanged value.
+为了实现 \code{return}，我们创建一个忽略环境并返回未更改值的动作。
 
-Putting it all together, after a few simplifications, we get the
-following definition:
+将所有部分整合在一起，经过一些简化，我们得到以下定义：
 
 \src{snippet12}
 
-\subsection{Write-Only State}
+\subsection{只写状态}
 
-This is just our initial logging example. The embellishment is given by
-the \code{Writer} functor:
+这正是我们最初的日志记录示例。其修饰由 \code{Writer} functor (Writer 函子) 给出：
 
 \src{snippet13}
-For completeness, there's also a trivial helper \code{runWriter} that
-unpacks the data constructor:
+为了完整起见，还有一个简单的辅助函数 \code{runWriter} 用于解包数据构造器：
 
 \src{snippet14}
-As we've seen before, in order to make \code{Writer} composable,
-\code{w} has to be a monoid. Here's the monad instance for
-\code{Writer} written in terms of the bind operator:
+正如我们之前看到的，为了使 \code{Writer} 可组合，\code{w} 必须是一个 monoid (幺半群)。以下是用 bind 运算符表示的 \code{Writer} 的 monad 实例：
 
 \src{snippet15}
 
-\subsection{State}
+\subsection{状态}
 
-Functions that have read/write access to state combine the
-embellishments of the \code{Reader} and the \code{Writer}. You may
-think of them as pure functions that take the state as an extra argument
-and produce a pair value/state as a result:
-\code{(a, s) -> (b, s)}. After currying, we get them
-into the form of Kleisli arrows
-\code{a -> (s -> (b, s))}, with the
-embellishment abstracted in the \code{State} functor:
+具有读/写状态访问权限的函数结合了 \code{Reader} 和 \code{Writer} 的修饰。你可以将它们视为纯函数，它们接受状态作为额外参数，并产生一个 值/状态 对作为结果：\code{(a, s) -> (b, s)}。柯里化之后，我们将它们转换成 Kleisli 箭头的形式 \code{a -> (s -> (b, s))}，其修饰被抽象在 \code{State} functor (State 函子) 中：
 
 \src{snippet16}
-Again, we can look at a Kleisli arrow as returning an action, which can
-be executed using the helper function:
+同样，我们可以将 Kleisli 箭头视为返回一个动作，该动作可以使用辅助函数执行：
 
 \src{snippet17}
-Different initial states may not only produce different results, but
-also different final states.
+不同的初始状态不仅可能产生不同的结果，还可能产生不同的最终状态。
 
-The implementation of bind for the \code{State} monad is very similar
-to that of the \code{Reader} monad, except that care has to be taken
-to pass the correct state at each step:
+\code{State} monad (State 单子) 的 bind 实现与 \code{Reader} monad 的实现非常相似，只是必须注意在每一步传递正确的状态：
 
 \src{snippet18}
-Here's the full instance:
+以下是完整的实例：
 
 \src{snippet19}
-There are also two helper Kleisli arrows that may be used to manipulate
-the state. One of them retrieves the state for inspection:
+还有两个可以用来操作状态的辅助 Kleisli 箭头。其中一个用于检索状态以供检查：
 
 \src{snippet20}
-and the other replaces it with a completely new state:
+另一个则用一个全新的状态替换它：
 
 \src{snippet21}
 
-\subsection{Exceptions}
+\subsection{异常}
 
-An imperative function that throws an exception is really a partial
-function --- it's a function that's not defined for some values of its
-arguments. The simplest implementation of exceptions in terms of pure
-total functions uses the \code{Maybe} functor. A partial function is
-extended to a total function that returns \code{Just a} whenever it
-makes sense, and \code{Nothing} when it doesn't. If we want to also
-return some information about the cause of the failure, we can use the
-\code{Either} functor instead (with the first type fixed, for
-instance, to \code{String}).
+一个抛出异常的命令式函数实际上是一个 partial function (偏函数) —— 它是一个对其某些参数值没有定义的函数。用纯粹的 total functions (全函数) 实现异常的最简单方法是使用 \code{Maybe} functor (Maybe 函子)。偏函数被扩展为一个全函数，当有意义时返回 \code{Just a}，否则返回 \code{Nothing}。如果我们还想返回一些关于失败原因的信息，我们可以改用 \code{Either} functor (Either 函子)（例如，将第一个类型固定为 \code{String}）。
 
-Here's the \code{Monad} instance for \code{Maybe}:
+以下是 \code{Maybe} 的 \code{Monad} 实例：
 
 \src{snippet22}
-Notice that monadic composition for \code{Maybe} correctly
-short-circuits the computation (the continuation \code{k} is never
-called) when an error is detected. That's the behavior we expect from
-exceptions.
+注意，\code{Maybe} 的单子组合在检测到错误时会正确地 short-circuit (短路) 计算（续延 \code{k} 永远不会被调用）。这正是我们期望从异常中得到的行为。
 
-\subsection{Continuations}
+\subsection{续延}
 
-It's the ``Don't call us, we'll call you!'' situation you may experience
-after a job interview. Instead of getting a direct answer, you are
-supposed to provide a handler, a function to be called with the result.
-This style of programming is especially useful when the result is not
-known at the time of the call because, for instance, it's being
-evaluated by another thread or delivered from a remote web site. A
-Kleisli arrow in this case returns a function that accepts a handler,
-which represents ``the rest of the computation'':
+这就像你面试后可能会遇到的“不要给我们打电话，我们会打给你！”的情况。你不会直接得到答案，而是应该提供一个 handler (处理程序)，即一个用于接收结果并被调用的函数。当调用时结果未知时（例如，因为它正在由另一个线程计算或从远程网站传递），这种编程风格特别有用。在这种情况下，Kleisli 箭头返回一个接受处理程序的函数，该处理程序代表“计算的其余部分”：
 
 \src{snippet23}
-The handler \code{a -> r}, when it's eventually called,
-produces the result of type \code{r}, and this result is returned at
-the end. A continuation is parameterized by the result type. (In
-practice, this is often some kind of status indicator.)
+处理程序 \code{a -> r} 在最终被调用时，会产生类型为 \code{r} 的结果，并且这个结果在最后被返回。续延由结果类型参数化。（在实践中，这通常是某种状态指示符。）
 
-There is also a helper function for executing the action returned by the
-Kleisli arrow. It takes the handler and passes it to the continuation:
+还有一个辅助函数用于执行 Kleisli 箭头返回的动作。它接受处理程序并将其传递给续延：
 
 \src{snippet24}
-The composition of continuations is notoriously difficult, so its
-handling through a monad and, in particular, the \code{do} notation,
-is of extreme advantage.
+续延的组合是出了名的困难，因此通过 monad，特别是 \code{do} 标记来处理它，具有极大的优势。
 
-Let's figure out the implementation of bind. First let's look at the
-stripped down signature:
+让我们搞清楚 bind 的实现。首先看下简化后的签名：
 
 \src{snippet25}
-Our goal is to create a function that takes the handler
-\code{(b -> r)} and produces the result \code{r}. So
-that's our starting point:
+我们的目标是创建一个函数，它接受处理程序 \code{(b -> r)} 并产生结果 \code{r}。所以这是我们的起点：
 
 \src{snippet26}
-Inside the lambda, we want to call the function \code{ka} with the
-appropriate handler that represents the rest of the computation. We'll
-implement this handler as a lambda:
+在 lambda 表达式内部，我们希望用代表计算其余部分的适当处理程序来调用函数 \code{ka}。我们将这个处理程序实现为一个 lambda：
 
 \src{snippet27}
-In this case, the rest of the computation involves first calling
-\code{kab} with \code{a}, and then passing \code{hb} to the
-resulting action \code{kb}:
+在这种情况下，计算的其余部分首先涉及用 \code{a} 调用 \code{kab}，然后将 \code{hb} 传递给生成的动作 \code{kb}：
 
 \src{snippet28}
-As you can see, continuations are composed inside out. The final handler
-\code{hb} is called from the innermost layer of the computation.
-Here's the full instance:
+如你所见，续延是从内向外组合的。最终的处理程序 \code{hb} 是从计算的最内层调用的。以下是完整的实例：
 
 \src{snippet29}
 
-\subsection{Interactive Input}
+\subsection{交互式输入}
 
-This is the trickiest problem and a source of a lot of confusion.
-Clearly, a function like \code{getChar}, if it were to return a
-character typed at the keyboard, couldn't be pure. But what if it
-returned the character inside a container? As long as there was no way
-of extracting the character from this container, we could claim that the
-function is pure. Every time you call \code{getChar} it would return
-exactly the same container. Conceptually, this container would contain
-the superposition of all possible characters.
+这是最棘手的问题，也是许多困惑的根源。显然，像 \code{getChar} 这样的函数，如果要返回键盘输入的字符，就不可能是纯的。但如果它在一个 container (容器) 内返回该字符呢？只要没有办法从这个容器中提取字符，我们就可以声称该函数是纯的。每次调用 \code{getChar} 时，它都会返回完全相同的容器。从概念上讲，这个容器将包含所有可能字符的 superposition (叠加态)。
 
-If you're familiar with quantum mechanics, you should have no problem
-understanding this analogy. It's just like the box with the
-Schrödinger's cat inside --- except that there is no way to open or peek
-inside the box. The box is defined using the special built-in
-\code{IO} functor. In our example, \code{getChar} could be declared
-as a Kleisli arrow:
+如果你熟悉 quantum mechanics (量子力学)，你应该不难理解这个类比。这就像装有薛定谔的猫的盒子 —— 只不过没有办法打开或窥视盒子内部。这个盒子是用特殊的内置 \code{IO} functor (IO 函子) 定义的。在我们的例子中，\code{getChar} 可以声明为一个 Kleisli 箭头：
 
 \src{snippet30}
-(Actually, since a function from the unit type is equivalent to picking
-a value of the return type, the declaration of \code{getChar} is
-simplified to \code{getChar :: IO Char}.)
+（实际上，由于来自 unit type (单元类型) 的函数等同于选择一个返回类型的值，\code{getChar} 的声明被简化为 \code{getChar :: IO Char}。）
 
-Being a functor, \code{IO} lets you manipulate its contents using
-\code{fmap}. And, as a functor, it can store the contents of any type,
-not just a character. The real utility of this approach comes to light
-when you consider that, in Haskell, \code{IO} is a monad. It means
-that you are able to compose Kleisli arrows that produce \code{IO}
-objects.
+作为一个函子，\code{IO} 允许你使用 \code{fmap} 来操作其内容。而且，作为一个函子，它可以存储任何类型的内容，而不仅仅是字符。当你考虑到在 Haskell 中 \code{IO} 是一个 monad 时，这种方法的真正效用就显现出来了。这意味着你能够组合产生 \code{IO} 对象的 Kleisli 箭头。
 
-You might think that Kleisli composition would allow you to peek at the
-contents of the \code{IO} object (thus ``collapsing the wave
-function,'' if we were to continue the quantum analogy). Indeed, you
-could compose \code{getChar} with another Kleisli arrow that takes a
-character and, say, converts it to an integer. The catch is that this
-second Kleisli arrow could only return this integer as an
-\code{(IO\ Int)}. Again, you'll end up with a superposition of all
-possible integers. And so on. The Schrödinger's cat is never out of the
-bag. Once you are inside the \code{IO} monad, there is no way out of
-it. There is no equivalent of \code{runState} or \code{runReader}
-for the \code{IO} monad. There is no \code{runIO}!
+你可能会认为 Kleisli 组合会允许你窥视 \code{IO} 对象的内容（如果我们继续量子类比的话，就是“坍缩波函数”）。确实，你可以将 \code{getChar} 与另一个 Kleisli 箭头组合，该箭头接受一个字符并（比如说）将其转换为整数。但问题在于，第二个 Kleisli 箭头只能将此整数作为 \code{(IO\ Int)} 返回。你最终还是会得到所有可能整数的叠加态。依此类推。薛定谔的猫永远出不了那个袋子。一旦你进入了 \code{IO} monad (IO 单子)，就无法从中出来。对于 \code{IO} monad，没有等价于 \code{runState} 或 \code{runReader} 的东西。没有 \code{runIO}！
 
-So what can you do with the result of a Kleisli arrow, the \code{IO}
-object, other than compose it with another Kleisli arrow? Well, you can
-return it from \code{main}. In Haskell, \code{main} has the
-signature:
+那么，除了将 Kleisli 箭头的结果（即 \code{IO} 对象）与另一个 Kleisli 箭头组合之外，你还能用它做什么呢？嗯，你可以从 \code{main} 函数返回它。在 Haskell 中，\code{main} 的签名是：
 
 \src{snippet31}
-and you are free to think of it as a Kleisli arrow:
+你可以自由地将其视为一个 Kleisli 箭头：
 
 \src{snippet32}
-From that perspective, a Haskell program is just one big Kleisli arrow
-in the \code{IO} monad. You can compose it from smaller Kleisli arrows
-using monadic composition. It's up to the runtime system to do something
-with the resulting \code{IO} object (also called \code{IO} action).
+从这个角度来看，一个 Haskell 程序就是 \code{IO} monad 中的一个大的 Kleisli 箭头。你可以使用单子组合将其由更小的 Kleisli 箭头组合而成。最终产生的 \code{IO} 对象（也称为 \code{IO} action (IO 动作)）如何处理则取决于 runtime system (运行时系统)。
 
-Notice that the arrow itself is a pure function --- it's pure functions
-all the way down. The dirty work is relegated to the system. When it
-finally executes the \code{IO} action returned from \code{main}, it
-does all kinds of nasty things like reading user input, modifying files,
-printing obnoxious messages, formatting a disk, and so on. The Haskell
-program never dirties its hands (well, except when it calls
-\code{unsafePerformIO}, but that's a different story).
+请注意，箭头本身是一个纯函数 —— 彻头彻尾都是纯函数。肮脏的工作被委托给了系统。当系统最终执行从 \code{main} 返回的 \code{IO} 动作时，它会执行各种“肮脏”的事情，比如读取用户输入、修改文件、打印令人讨厌的消息、格式化磁盘等等。Haskell 程序本身从不“弄脏自己的手”（嗯，除非它调用了 \code{unsafePerformIO}，但那是另一回事了）。
 
-Of course, because Haskell is lazy, \code{main} returns almost
-immediately, and the dirty work begins right away. It's during the
-execution of the \code{IO} action that the results of pure
-computations are requested and evaluated on demand. So, in reality, the
-execution of a program is an interleaving of pure (Haskell) and dirty
-(system) code.
+当然，因为 Haskell 是惰性的，\code{main} 几乎立即返回，而肮脏的工作马上开始。正是在执行 \code{IO} 动作期间，纯计算的结果才被请求并按需求值。因此，实际上，程序的执行是纯粹的（Haskell）代码和肮脏的（系统）代码交织在一起的。
 
-There is an alternative interpretation of the \code{IO} monad that is
-even more bizarre but makes perfect sense as a mathematical model. It
-treats the whole Universe as an object in a program. Notice that,
-conceptually, the imperative model treats the Universe as an external
-global object, so procedures that perform I/O have side effects by
-virtue of interacting with that object. They can both read and modify
-the state of the Universe.
+对于 \code{IO} monad，还有一种更奇特但作为数学模型却非常合理的解释。它将整个 Universe (宇宙) 视为程序中的一个对象。请注意，从概念上讲，命令式模型将宇宙视为一个外部全局对象，因此执行 I/O 的过程由于与该对象交互而具有副作用。它们既可以读取也可以修改宇宙的状态。
 
-We already know how to deal with state in functional programming --- we
-use the state monad. Unlike simple state, however, the state of the
-Universe cannot be easily described using standard data structures. But
-we don't have to, as long as we never directly interact with it. It's
-enough that we assume that there exists a type \code{RealWorld} and,
-by some miracle of cosmic engineering, the runtime is able to provide an
-object of this type. An \code{IO} action is just a function:
+我们已经知道如何在函数式编程中处理状态 —— 我们使用 state monad (状态单子)。然而，与简单的状态不同，宇宙的状态无法轻易地用标准数据结构来描述。但只要我们从不直接与之交互，我们就不必这样做。我们只需要假设存在一个类型 \code{RealWorld}，并且通过某种宇宙工程的奇迹，运行时能够提供这种类型的对象。一个 \code{IO} 动作仅仅是一个函数：
 
 \src{snippet33}
-Or, in terms of the \code{State} monad:
+或者，用 \code{State} monad 的术语来说：
 
 \src{snippet34}
-However, \code{>=>} and \code{return} for
-the \code{IO} monad have to be built into the language.
+然而，用于 \code{IO} monad 的 \code{>=>} 和 \code{return} 必须内建在语言中。
 
-\subsection{Interactive Output}
+\subsection{交互式输出}
 
-The same \code{IO} monad is used to encapsulate interactive output.
-\code{RealWorld} is supposed to contain all output devices. You might
-wonder why we can't just call output functions from Haskell and pretend
-that they do nothing. For instance, why do we have:
+同样的 \code{IO} monad 也用于封装交互式输出。\code{RealWorld} 被认为包含了所有的输出设备。你可能想知道为什么我们不能直接从 Haskell 调用输出函数，并假装它们什么也不做。例如，为什么我们有：
 
 \src{snippet35}
-rather than the simpler:
+而不是更简单的：
 
 \src{snippet36}
-Two reasons: Haskell is lazy, so it would never call a function whose
-output --- here, the unit object --- is not used for anything. And, even
-if it weren't lazy, it could still freely change the order of such calls
-and thus garble the output. The only way to force sequential execution
-of two functions in Haskell is through data dependency. The input of one
-function must depend on the output of another. Having \code{RealWorld}
-passed between \code{IO} actions enforces sequencing.
+有两个原因：Haskell 是惰性的，所以它永远不会调用一个其输出（这里是 unit object (单元对象)）未被用于任何地方的函数。而且，即使它不是惰性的，它仍然可以自由地改变这类调用的顺序，从而扰乱输出。在 Haskell 中强制两个函数顺序执行的唯一方法是通过 data dependency (数据依赖)。一个函数的输入必须依赖于另一个函数的输出。让 \code{RealWorld} 在 \code{IO} 动作之间传递强制了顺序执行。
 
-Conceptually, in this program:
+从概念上讲，在这个程序中：
 
 \src{snippet37}
-the action that prints ``World!'' receives, as input, the Universe in
-which ``Hello '' is already on the screen. It outputs a new Universe,
-with ``Hello World!'' on the screen.
+打印 “World!” 的动作接收到的输入是 “Hello ” 已经在屏幕上的那个宇宙。它输出一个新的宇宙，在这个宇宙中，“Hello World!” 出现在屏幕上。
 
-\section{Conclusion}
+\section{结论}
 
-Of course I have just scratched the surface of monadic programming.
-Monads not only accomplish, with pure functions, what normally is done
-with side effects in imperative programming, but they also do it with a
-high degree of control and type safety. They are not without drawbacks,
-though. The major complaint about monads is that they don't easily
-compose with each other. Granted, you can combine most of the basic
-monads using the monad transformer library. It's relatively easy to
-create a monad stack that combines, say, state with exceptions, but
-there is no formula for stacking arbitrary monads together.
+当然，我这里仅仅触及了 monadic programming (单子化编程) 的皮毛。Monad 不仅能用纯函数完成命令式编程中通常通过副作用完成的事情，而且还能以高度的控制和 type safety (类型安全) 来完成。然而，它们并非没有缺点。关于 monad 的主要抱怨是它们不容易相互组合。诚然，你可以使用 monad transformer (单子变换器) 库来组合大多数基本的 monad。创建一个结合了（比方说）状态和异常的 monad stack (单子栈) 相对容易，但是没有通用的公式可以将任意 monad 堆叠在一起。

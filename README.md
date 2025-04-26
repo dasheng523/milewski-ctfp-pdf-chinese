@@ -1,80 +1,52 @@
 ![GitHub stars][github stars]
 [![GitHub Workflow Status][github workflow status]][github actions link]
-[![Download][download badge]][github latest release]
-[![License][license badge]][github latest release]
+[![下载][download badge]][github latest release]
+[![许可证][license badge]][github latest release]
 
-# Category Theory For Programmers
+# 给程序员的范畴论
 
-An _unofficial_ PDF version of "**C**ategory **T**heory **F**or **P**rogrammers"
-by [Bartosz Milewski][bartosz github], converted from his [blogpost
-series][blogpost series] (_with permission!_).
+由 [Bartosz Milewski][bartosz github] 撰写的《**给**程序员的**范**畴**论**》(Category Theory For Programmers) 的一个_非官方_ PDF 版本，从他的[系列博文][blogpost series]转换而来（_已获许可！_）。
 
-![Category Theory for Programmers][ctfp image]
+![给程序员的范畴论][ctfp image]
 
-## Buy the book
+## 购买本书
 
-- **[Standard edition in full-color hardcover
-  print][buy regular edition on blurb]**
-  - Publish date: 12 August, 2019.
-  - Based off release tag [v1.3.0][v1.3.0 github release link]. See
-    [errata-1.3.0](errata-1.3.0.md) for changes and fixes since print.
-- **[Scala Edition in paperback][buy scala edition on blurb]**
-  - Publish date: 12 August, 2019.
-  - Based off release tag [v1.3.0][v1.3.0 github release link]. See
-    [errata-scala](errata-scala.md) for changes and fixes since print.
+-   **[标准版全彩精装印刷版][buy regular edition on blurb]**
+    -   出版日期：2019 年 8 月 12 日。
+    -   基于发布标签 [v1.3.0][v1.3.0 github release link]。关于印刷后的更改和修复，请参阅 [errata-1.3.0](errata-1.3.0.md)。
+-   **[Scala 版平装版][buy scala edition on blurb]**
+    -   出版日期：2019 年 8 月 12 日。
+    -   基于发布标签 [v1.3.0][v1.3.0 github release link]。关于印刷后的更改和修复，请参阅 [errata-scala](errata-scala.md)。
 
-## Build the book
+## 构建本书
 
-The building workflow requires [Nix][nix website]. After [installing
-Nix][nix download website], you need to enable the upcoming "flake" feature
-which must be [enabled manually][nixos wiki flake] the time being. This is
-needed to expose the new Nix commands and flakes support that are hidden behind
-feature-flags.
+构建工作流需要 [Nix][nix website]。在[安装 Nix][nix download website] 之后，你需要启用即将推出的 "flake" 功能，该功能目前必须[手动启用][nixos wiki flake]。这是为了暴露隐藏在功能标志后面的新 Nix 命令和 flakes 支持。
 
-Afterwards, type `nix flake show` in the root directory of the project to see
-all the available versions of this book. Then type `nix build .#<edition>` to
-build the edition you want (Scala, OCaml, Reason and their printed versions).
-For example, to build the Scala edition you'll have to type
-`nix build .#ctfp-scala`. For Haskell (the original version) that is just
-`nix build .#ctfp`.
+之后，在项目的根目录中输入 `nix flake show` 来查看本书所有可用的版本。然后输入 `nix build .#<edition>` 来构建你想要的版本（Scala、OCaml、Reason 及其印刷版本）。例如，要构建 Scala 版本，你需要输入 `nix build .#ctfp-scala`。对于 Haskell（原始版本），只需输入 `nix build .#ctfp`。
 
-Upon successful compilation, the PDF file will be placed in the `result`
-directory.
+编译成功后，PDF 文件将放置在 `result` 目录中。
 
-The command `nix develop` will provide a shell containing all the required
-dependencies to build the book manually using the provided `Makefile`. To build
-the `ctfp-scala` edition, just run `make ctfp-scala`.
+命令 `nix develop` 将提供一个包含所有必需依赖项的 Shell 环境，以便使用提供的 `Makefile` 手动构建本书。要构建 `ctfp-scala` 版本，只需运行 `make ctfp-scala`。
 
-## Contribute
+## 贡献
 
-Contributors are welcome to contribute to this book by sending pull-requests.
-Once reviewed, the changes are merged in the main branch and will be
-incorporated in the next release.
+欢迎贡献者通过发送 Pull Request 为本书做出贡献。在审查之后，更改将合并到主分支 (main branch) 中，并将包含在下一个版本 (release) 中。
 
-**Note from [Bartosz][bartosz github]**: I really appreciate all your
-contributions. You made this book much better than I could have imagined. Thank
-you!
+**来自 [Bartosz][bartosz github] 的说明**：我非常感谢你们所有的贡献。你们让这本书变得比我想象的要好得多。谢谢你们！
 
-Find the [list of contributors on Github][contributors].
+在 [Github 上查找贡献者列表][contributors]。
 
-## Acknowledgements
+## 致谢
 
-PDF LaTeX source and the tools to create it are based on the work by [Andres
-Raba][andres raba github]. The book content is taken, with permission, from
-[Bartosz Milewski][bartosz github]'s blogpost series, and adapted to the LaTeX
-format.
+PDF LaTeX 源代码及其创建工具基于 [Andres Raba][andres raba github] 的工作。本书内容经许可取自 [Bartosz Milewski][bartosz github] 的系列博文，并改编为 LaTeX 格式。
 
-The original blog post acknowledgments by Bartosz are consolidated in the
-_Acknowledgments_ page at the end of the book.
+Bartosz 的原始博文致谢已整合在本书末尾的 _致谢_ 页面中。
 
-## License
+## 许可证
 
-The PDF book, `.tex` files, and associated images and figures in directories
-`src/fig` and `src/content` are licensed under [Creative Commons
-Attribution-ShareAlike 4.0 International License][license cc by sa].
+PDF 书籍、`.tex` 文件以及 `src/fig` 和 `src/content` 目录中的相关图像和图表采用 [知识共享署名-相同方式共享 4.0 国际许可协议][license cc by sa] 授权。
 
-The script files `scraper.py` and others are licensed under [GNU General Public
-License version 3][license gnu gpl].
+脚本文件 `scraper.py` 及其他文件采用 [GNU 通用公共许可证版本 3][license gnu gpl] 授权。
 
 [download badge]:
   https://img.shields.io/badge/Download-latest-green.svg?style=flat-square

@@ -1,25 +1,12 @@
 % !TEX root = ctfp-print.tex
 
-\lettrine[lhang=0.17]{T}{his is the} ReasonML edition of \emph{Category Theory for Programmers}.
-It's been a tremendous success, making Bartosz Milewski's blog post series available as a nicely-
-typeset \acronym{PDF}, as well as a hardcover book. There have been numerous contributions made
-to improve the book, by fixing typos and errors, as well as translating the code snippets into
-other programming languages.
+\lettrine[lhang=0.17]{这}{是} \emph{Category Theory for Programmers} (《给程序员的范畴论》) 的 ReasonML 版本。本书取得了巨大的成功，它将 Bartosz Milewski 的系列博文整理成排版精美的 \acronym{PDF} 文档，并出版了精装实体书。众多贡献者通过修正笔误与错误、以及将代码片段 (code snippets) 翻译成其他编程语言等方式，为改进本书做出了贡献。
 
-I am thrilled to present this edition of the book, containing the original Haskell code, followed by
-its ReasonML counterpart. The ReasonML code snippets were converted from the OCaml snippets which were
-generously provided by \urlref{https://github.com/ArulselvanMadhavan/ocaml-ctfp}{ocaml-ctfp} contributors,
-and slightly modified to suit the format of this book.
+我非常激动能向大家呈献本书的这一版本，其中包含原始的 Haskell 代码，其后附有对应的 ReasonML 代码。ReasonML 代码片段是由 OCaml 片段转换而来，这些 OCaml 片段由 \urlref{https://github.com/ArulselvanMadhavan/ocaml-ctfp}{ocaml-ctfp} 项目的贡献者们慷慨惠赠，并根据本书的格式进行了少量修改。
 
-To support code snippets in multiple languages, I am using a \LaTeX{} macro to load the code snippets
-from external files. This allows easily extending the book with other languages, while leaving the
-original text intact. Which is why you should mentally append the words ``and ReasonML'' whenever you see
-``in Haskell'' in the text.
+为了支持多种语言的代码片段，我使用了一个 \LaTeX{} 宏 (macro) 从外部文件 (external files) 加载代码片段。这种方式便于用其他语言扩展本书，同时保持原文本内容的原封不动。因此，每当您在文中看到 “in Haskell” 时，请在心里补充上 “以及 ReasonML”。
 
-The code is laid out in the following manner: the original Haskell code, followed by ReasonML code.
-To distinguish between them, the code snippets are braced from the left with a vertical bar, in the primary
-color of the language's logo, \raisebox{-.2mm}{\includegraphics[height=.3cm]{fig/icons/haskell.png}},
-and \raisebox{-.2mm}{\includegraphics[height=.3cm]{fig/icons/reason.png}} respectively, e.g.:
+代码按以下方式排版：首先是原始的 Haskell 代码，其后是 ReasonML 代码。为了区分两者，代码片段的左侧标有一条竖线，其颜色分别为相应语言 logo 的主色调，即 Haskell \raisebox{-.2mm}{\includegraphics[height=.3cm]{fig/icons/haskell.png}} 和 ReasonML \raisebox{-.2mm}{\includegraphics[height=.3cm]{fig/icons/reason.png}}，例如：
 
 \srcsnippet{content/1.1/code/haskell/snippet03.hs}{blue}{haskell}
 \unskip
